@@ -71,11 +71,11 @@ namespace MusicMan___Desktop
         private string RetrieveVideoId(string videoUrl)
         {
             string[] videoParts = videoUrl.Split("/watch?v=");
-            string videoId = "";
+            string videoId;
 
             try
             {
-                videoId = videoParts[1];
+                 videoId = videoParts[1];
             }
             catch
             {
