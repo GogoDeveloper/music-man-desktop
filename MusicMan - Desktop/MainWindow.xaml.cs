@@ -32,15 +32,27 @@ namespace MusicMan___Desktop
             string videoUrl = UrlLbl.Text;
 
             if (string.IsNullOrEmpty(videoUrl))
+            {
+                MessageBox.Show("Input cannot be empty!", "No Url detected.", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
+            }
+
 
             if (!(new Uri(videoUrl).Host == "www.youtube.com"))
+            {
+                MessageBox.Show("The link you've entered is invalid!", "Invalid Url detected", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
+            }
+                
 
             string videoId = RetrieveVideoId(videoUrl);
 
             if (string.IsNullOrEmpty(videoId))
+            {
+                MessageBox.Show("The link you've entered is invalid!", "Invalid Url detected", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
+            }
+                
 
             YoutubeClient youtubeClient = new YoutubeClient();
             StreamManifest manifest;
@@ -75,7 +87,7 @@ namespace MusicMan___Desktop
 
             try
             {
-                 videoId = videoParts[1];
+                videoId = videoParts[1];
             }
             catch
             {
