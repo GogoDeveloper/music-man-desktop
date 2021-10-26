@@ -10,6 +10,21 @@
         <TabControl>
             <TabItem Header="Music">
                 <ListView Name="lvSongs">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <WrapPanel>
+                                    <Button Click="SelectedSont_Click">
+                                        <!--<Image Source="{Binding ImageUrl}"></Image>-->
+                                        <TextBlock Text="{Binding Title}"></TextBlock>
+                                        
+                                    </Button>
+                                    
+                                    
+                                </WrapPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
                     
                 </ListView>
             </TabItem>
