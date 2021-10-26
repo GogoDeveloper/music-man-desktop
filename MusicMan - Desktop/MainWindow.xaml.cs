@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 using System.IO;
+using NAudio.Wave;
 
 namespace MusicMan___Desktop
 {
@@ -24,6 +25,7 @@ namespace MusicMan___Desktop
     public partial class MainWindow : Window
     {
         List<Music> musicList = new List<Music>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -113,7 +115,21 @@ namespace MusicMan___Desktop
 
         private void MusicTab_Focus(object sender, RoutedEventArgs e)
         {
-            //List<> songs = System.IO.Directory.GetFiles(Properties.Settings.Default.MusicPath);
+            string[] songs = Directory.GetFiles(Properties.Settings.Default.MusicPath);
+
+            foreach (var song in songs)
+            {
+                Music currentSong = null;
+
+                currentSong.FilePath = Properties.Settings.Default.MusicPath + song;
+
+                using (Mp3FileReader reader = new Mp3FileReader(Properties.Settings.Default.MusicPath + song))
+                {
+                    currentSong.Length = reader.TotalTime;
+                }
+
+                currentSong.Title = song.Replace(".mp3", "");
+            }
         }
     }
 }
