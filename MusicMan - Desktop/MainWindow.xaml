@@ -18,7 +18,7 @@
                                     <!--<Image Source="{Binding ImageUrl}"></Image>-->
                                     <TextBlock Text="{Binding Title}"></TextBlock>
                                     <TextBlock Text="{Binding FilePath}"></TextBlock>
-                                    <TextBlock Text="{Binding Length}"></TextBlock>
+                                    <!--<TextBlock Text="{Binding Length}"></TextBlock>-->
 
                                 </WrapPanel>
                             </StackPanel>

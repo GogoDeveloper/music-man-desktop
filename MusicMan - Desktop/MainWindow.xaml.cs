@@ -121,16 +121,14 @@ namespace MusicMan___Desktop
             {
                 Music currentSong = null;
                 //Mp3FileReader reader = new Mp3FileReader(Properties.Settings.Default.MusicPath + song);
-
-                //Music currentSong = new Music
-                //{
+                
+                //Music currentSong = new Music {
                 //    FilePath = Properties.Settings.Default.MusicPath + song,
                 //    Length = reader.TotalTime,
                 //    Title = song.Replace(".mp3", "")
                 //};
-                //musicList.Add(currentSong);
 
-
+            
 
                 currentSong.FilePath = Properties.Settings.Default.MusicPath + song;
 
