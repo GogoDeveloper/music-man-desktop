@@ -22,9 +22,13 @@ namespace MusicMan___Desktop
     /// </summary>
     public partial class MainWindow : Window
     {
+        List<Music> musicList = new List<Music>();
         public MainWindow()
         {
+
             InitializeComponent();
+
+            lvSongs.ItemsSource = musicList;
         }
 
         private async void DownloadBtn_Click(object sender, RoutedEventArgs e)

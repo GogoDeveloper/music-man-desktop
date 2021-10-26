@@ -9,7 +9,9 @@
     <Grid>
         <TabControl>
             <TabItem Header="Music">
-                
+                <ListView Name="lvSongs">
+                    
+                </ListView>
             </TabItem>
             <TabItem Header="Playlist">
                 
