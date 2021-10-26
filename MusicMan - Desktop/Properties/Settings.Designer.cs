@@ -25,7 +25,7 @@ namespace MusicMan___Desktop.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp")]
         public string MusicPath {
             get {
                 return ((string)(this["MusicPath"]));

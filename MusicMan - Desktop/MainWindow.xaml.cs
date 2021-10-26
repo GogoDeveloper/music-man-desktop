@@ -15,7 +15,6 @@ using System.Windows.Shapes;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 using System.IO;
-using NAudio.Wave;
 
 namespace MusicMan___Desktop
 {
@@ -77,7 +76,7 @@ namespace MusicMan___Desktop
             {
                 await DonwloadAudio(youtubeClient, audioStream);
             }
-            catch
+            catch(Exception ex)
             {
                 return;
             }
@@ -109,26 +108,22 @@ namespace MusicMan___Desktop
 
         private async Task DonwloadAudio(YoutubeClient client, IStreamInfo streamInfo)
         {
-            string donwloadPath = Properties.Settings.Default.MusicPath + $"/temp.mp3";
+            string donwloadPath = Properties.Settings.Default.MusicPath + @"\temp.mp3";
             await client.Videos.Streams.DownloadAsync(streamInfo, donwloadPath);
         }
 
         private void MusicTab_Focus(object sender, RoutedEventArgs e)
         {
-            string[] songs = Directory.GetFiles(Properties.Settings.Default.MusicPath);
+            string[] songs = Directory.GetFiles(Properties.Settings.Default.MusicPath, "*.mp3");
 
             foreach (var song in songs)
             {
-                Music currentSong = null;
+                Music currentSong = new Music();
 
-                currentSong.FilePath = Properties.Settings.Default.MusicPath + song;
+                currentSong.FilePath = song;
+                currentSong.Title = System.IO.Path.GetFileName(song).Replace(".mp3", "");
 
-                using (Mp3FileReader reader = new Mp3FileReader(Properties.Settings.Default.MusicPath + song))
-                {
-                    currentSong.Length = reader.TotalTime;
-                }
-
-                currentSong.Title = song.Replace(".mp3", "");
+                musicList.Add(currentSong);
             }
         }
     }
