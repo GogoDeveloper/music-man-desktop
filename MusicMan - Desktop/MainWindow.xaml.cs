@@ -43,7 +43,7 @@ namespace MusicMan___Desktop
                 MessageBox.Show("The link you've entered is invalid!", "Invalid Url detected", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-                
+            
 
             string videoId = RetrieveVideoId(videoUrl);
 
@@ -104,8 +104,8 @@ namespace MusicMan___Desktop
 
         private async Task DonwloadAudio(YoutubeClient client, IStreamInfo streamInfo)
         {
-            string tempPath = "temp.mp3";
-            await client.Videos.Streams.DownloadAsync(streamInfo, tempPath);
+            string donwloadPath = Properties.Settings.Default.MusicPath + $"/temp.mp3";
+            await client.Videos.Streams.DownloadAsync(streamInfo, donwloadPath);
         }
     }
 }
