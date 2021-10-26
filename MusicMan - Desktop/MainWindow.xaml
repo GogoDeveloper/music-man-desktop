@@ -6,33 +6,56 @@
         xmlns:local="clr-namespace:MusicMan___Desktop"
         mc:Ignorable="d"
         Title="MusicMan" Height="450" Width="800">
-    <Grid>
+    <Grid Background="#FF404040">
         <TabControl>
-            <TabItem Header="Music" GotFocus="MusicTab_Focus">
-                <ListView Name="lvSongs">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <WrapPanel>
-
+            <TabItem Header="Music">
+                <StackPanel Background="#FF8F8F8F">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="4" Name="ReloadButton" Click="ReloadButton_Click">Reload</Button>
+                    </Grid>
+                    <ListView Name="lvSongs">
+                        <ListView.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleY="1"/>
+                                <SkewTransform AngleX="-0.422"/>
+                                <RotateTransform/>
+                                <TranslateTransform X="1.327"/>
+                            </TransformGroup>
+                        </ListView.RenderTransform>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
                                     <!--<Image Source="{Binding ImageUrl}"></Image>-->
-                                    <TextBlock Text="{Binding Title}"></TextBlock>
+                                    <WrapPanel>
+                                        <TextBlock Text="{Binding Title}" FontWeight="Bold"></TextBlock>
+                                        <TextBlock Text="{Binding Author}" FontWeight="DemiBold"></TextBlock>
+                                    </WrapPanel>
+                                    
                                     <TextBlock Text="{Binding FilePath}"></TextBlock>
+                                    
                                     <!--<TextBlock Text="{Binding Length}"></TextBlock>-->
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
 
-                                </WrapPanel>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
 
-                </ListView>
+
             </TabItem>
             <TabItem Header="Playlist">
 
             </TabItem>
             <TabItem Header="Download" Height="20" VerticalAlignment="Top">
                 <Grid>
-                    <Button HorizontalAlignment="Center" Content="Download" Height="40" Width="120" FontSize="20" FontWeight="Bold" Click="DownloadBtn_Click"/>
+                    <Button Cursor="Hand" HorizontalAlignment="Center" Content="Download" Height="40" Width="120" FontSize="20" FontWeight="Bold" Click="DownloadBtn_Click"/>
                     <TextBox HorizontalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,0,100" Width="300" Height="30" Name="UrlLbl"/>
                 </Grid>
             </TabItem>

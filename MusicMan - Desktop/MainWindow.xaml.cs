@@ -15,7 +15,6 @@ using System.Windows.Shapes;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 using System.IO;
-using NAudio.Wave;
 
 namespace MusicMan___Desktop
 {
@@ -24,12 +23,16 @@ namespace MusicMan___Desktop
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<Music> musicList = new List<Music>();
+
+        string videoTitle { get; set; }
+        string videoAuthor { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
-            lvSongs.ItemsSource = musicList;
+
+            RelaodSongs();
+
         }
 
         private async void DownloadBtn_Click(object sender, RoutedEventArgs e)
@@ -48,19 +51,23 @@ namespace MusicMan___Desktop
                 MessageBox.Show("The link you've entered is invalid!", "Invalid Url detected", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            
 
-            string videoId = RetrieveVideoId(videoUrl);
+
+            string videoId =  RetrieveVideoId(videoUrl);
 
             if (string.IsNullOrEmpty(videoId))
             {
                 MessageBox.Show("The link you've entered is invalid!", "Invalid Url detected", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-                
+
 
             YoutubeClient youtubeClient = new YoutubeClient();
+
+           
+
             StreamManifest manifest;
+           
 
             try
             {
@@ -73,11 +80,16 @@ namespace MusicMan___Desktop
 
             var audioStream = manifest.GetAudioOnlyStreams().GetWithHighestBitrate();
 
+
             try
             {
                 await DonwloadAudio(youtubeClient, audioStream);
+                var downloadPath = Properties.Settings.Default.MusicPath + @$"\{videoTitle}.mp3";
+                var file = TagLib.File.Create(downloadPath);
+                file.Tag.AlbumArtists = new string[] { $"{videoAuthor}" };
+
             }
-            catch
+            catch (Exception ex)
             {
                 return;
             }
@@ -104,41 +116,53 @@ namespace MusicMan___Desktop
 
         private async Task<StreamManifest> RetrieveStreamManifest(string videoId, YoutubeClient client)
         {
+            var video = await client.Videos.GetAsync(videoId);
+            videoTitle = video.Title;
+            videoAuthor = video.Author.Title;
             return await client.Videos.Streams.GetManifestAsync(videoId);
+
         }
 
         private async Task DonwloadAudio(YoutubeClient client, IStreamInfo streamInfo)
         {
-            string donwloadPath = Properties.Settings.Default.MusicPath + $"/temp.mp3";
-            await client.Videos.Streams.DownloadAsync(streamInfo, donwloadPath);
-        }
 
-        private void MusicTab_Focus(object sender, RoutedEventArgs e)
-        {
-            string[] songs = Directory.GetFiles(Properties.Settings.Default.MusicPath);
-
-            foreach (var song in songs)
-            {
-                Music currentSong = null;
-                //Mp3FileReader reader = new Mp3FileReader(Properties.Settings.Default.MusicPath + song);
-                
-                //Music currentSong = new Music {
-                //    FilePath = Properties.Settings.Default.MusicPath + song,
-                //    Length = reader.TotalTime,
-                //    Title = song.Replace(".mp3", "")
-                //};
-
+            string downloadPath = Properties.Settings.Default.MusicPath + @$"\{videoTitle}.mp3";
+            await client.Videos.Streams.DownloadAsync(streamInfo, downloadPath);
+            
+            
             
 
-                currentSong.FilePath = Properties.Settings.Default.MusicPath + song;
-
-                using (Mp3FileReader reader = new Mp3FileReader(Properties.Settings.Default.MusicPath + song))
-                {
-                    currentSong.Length = reader.TotalTime;
-                }
-
-                currentSong.Title = song.Replace(".mp3", "");
-            }
         }
+        private void ReloadButton_Click(object sender, RoutedEventArgs e)
+        {
+            RelaodSongs();
+        }
+        private void RelaodSongs()
+        {
+            List<Music> musicList = new List<Music>();
+            List<string> songs = Directory.GetFiles(Properties.Settings.Default.MusicPath, "*.mp3").ToList();
+            if (songs.Any())
+            {
+                foreach (var song in songs)
+                {
+                    var file = TagLib.File.Create(song);
+                    
+                   
+                    Music currentSong = new Music
+                    {
+                        FilePath = song,
+                        Title = System.IO.Path.GetFileName(song).Replace(".mp3", ""),
+                        Author = file.Tag.AlbumArtists!= null ? file.Tag.AlbumArtists.FirstOrDefault() : ""
+                    };
+
+
+
+                    musicList.Add(currentSong);
+                }
+            }
+            lvSongs.ItemsSource = musicList;
+        }
+
+
     }
 }
