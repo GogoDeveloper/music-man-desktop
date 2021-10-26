@@ -8,7 +8,7 @@
         Title="MusicMan" Height="450" Width="800">
     <Grid>
         <TabControl>
-            <TabItem Header="Music">
+            <TabItem Header="Music" GotFocus="MusicTab_Focus">
                 <ListView Name="lvSongs">
                     
                 </ListView>

@@ -9,8 +9,7 @@ namespace MusicMan___Desktop
     class Music
     {
         public string Title { get; set; }
-        public string Description { get; set; }
-        public string ImageUrl { get; set; }
-        public string FileSrc { get; set; }
+        public string FilePath { get; set; }
+        public TimeSpan Length { get; set; }
     }
 }

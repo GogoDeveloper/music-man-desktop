@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
+using System.IO;
 
 namespace MusicMan___Desktop
 {
@@ -25,9 +26,7 @@ namespace MusicMan___Desktop
         List<Music> musicList = new List<Music>();
         public MainWindow()
         {
-
             InitializeComponent();
-
             lvSongs.ItemsSource = musicList;
         }
 
@@ -110,6 +109,11 @@ namespace MusicMan___Desktop
         {
             string donwloadPath = Properties.Settings.Default.MusicPath + $"/temp.mp3";
             await client.Videos.Streams.DownloadAsync(streamInfo, donwloadPath);
+        }
+
+        private void MusicTab_Focus(object sender, RoutedEventArgs e)
+        {
+            //List<> songs = System.IO.Directory.GetFiles(Properties.Settings.Default.MusicPath);
         }
     }
 }
