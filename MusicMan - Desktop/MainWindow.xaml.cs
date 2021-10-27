@@ -86,7 +86,8 @@ namespace MusicMan___Desktop
                 await DownloadAudio(youtubeClient, audioStream);
                 var downloadPath = Properties.Settings.Default.MusicPath + @$"\{videoTitle}.mp3";
                 var file = TagLib.File.Create(downloadPath);
-                file.Tag.AlbumArtists = new string[] { $"{videoAuthor}" };
+                file.Tag.AlbumArtists = new[] { $"{videoAuthor}" };
+                file.Save();
 
             }
             catch (Exception)

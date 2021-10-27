@@ -30,16 +30,16 @@
                             </TransformGroup>
                         </ListView.RenderTransform>
                         <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel>
+                            <DataTemplate DataType="local:Music">
+                                <StackPanel Grid.IsSharedSizeScope="False">
                                     <!--<Image Source="{Binding ImageUrl}"></Image>-->
-                                    <WrapPanel>
-                                        <TextBlock Text="{Binding Title}" FontWeight="Bold"></TextBlock>
-                                        <TextBlock Text="{Binding Author}" FontWeight="DemiBold"></TextBlock>
-                                    </WrapPanel>
-                                    
+
+                                    <TextBlock Text="{Binding Title}" FontWeight="Bold"></TextBlock>
+                                    <TextBlock Text="{Binding Author}" FontWeight="ExtraLight" ></TextBlock>
+
+
                                     <TextBlock Text="{Binding FilePath}"></TextBlock>
-                                    
+
                                     <!--<TextBlock Text="{Binding Length}"></TextBlock>-->
                                 </StackPanel>
                             </DataTemplate>
