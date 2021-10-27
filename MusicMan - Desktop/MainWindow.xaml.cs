@@ -31,7 +31,7 @@ namespace MusicMan___Desktop
         {
             InitializeComponent();
 
-            RelaodSongs();
+            ReloadSongs();
 
         }
 
@@ -46,7 +46,7 @@ namespace MusicMan___Desktop
             }
 
 
-            if (!(new Uri(videoUrl).Host == "www.youtube.com"))
+            if (new Uri(videoUrl).Host != "www.youtube.com")
             {
                 MessageBox.Show("The link you've entered is invalid!", "Invalid Url detected", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -83,13 +83,13 @@ namespace MusicMan___Desktop
 
             try
             {
-                await DonwloadAudio(youtubeClient, audioStream);
+                await DownloadAudio(youtubeClient, audioStream);
                 var downloadPath = Properties.Settings.Default.MusicPath + @$"\{videoTitle}.mp3";
                 var file = TagLib.File.Create(downloadPath);
                 file.Tag.AlbumArtists = new string[] { $"{videoAuthor}" };
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return;
             }
@@ -123,7 +123,7 @@ namespace MusicMan___Desktop
 
         }
 
-        private async Task DonwloadAudio(YoutubeClient client, IStreamInfo streamInfo)
+        private async Task DownloadAudio(YoutubeClient client, IStreamInfo streamInfo)
         {
 
             string downloadPath = Properties.Settings.Default.MusicPath + @$"\{videoTitle}.mp3";
@@ -135,9 +135,9 @@ namespace MusicMan___Desktop
         }
         private void ReloadButton_Click(object sender, RoutedEventArgs e)
         {
-            RelaodSongs();
+            ReloadSongs();
         }
-        private void RelaodSongs()
+        private void ReloadSongs()
         {
             List<Music> musicList = new List<Music>();
             List<string> songs = Directory.GetFiles(Properties.Settings.Default.MusicPath, "*.mp3").ToList();
