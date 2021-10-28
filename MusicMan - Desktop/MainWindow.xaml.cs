@@ -24,8 +24,8 @@ namespace MusicMan___Desktop
     public partial class MainWindow : Window
     {
 
-        string videoTitle { get; set; }
-        string videoAuthor { get; set; }
+        string VideoTitle { get; set; }
+        string VideoAuthor { get; set; }
 
         public MainWindow()
         {
@@ -81,9 +81,9 @@ namespace MusicMan___Desktop
             try
             {
                 await DownloadAudio(youtubeClient, audioStream);
-                var downloadPath = Properties.Settings.Default.MusicPath + @$"\{videoTitle}.mp3";
+                var downloadPath = Properties.Settings.Default.MusicPath + @$"\{VideoTitle}.mp3";
                 var file = TagLib.File.Create(downloadPath);
-                file.Tag.AlbumArtists = new[] { $"{videoAuthor}" };
+                file.Tag.AlbumArtists = new[] { $"{VideoAuthor}" };
                 file.Save();
 
             }
@@ -115,15 +115,15 @@ namespace MusicMan___Desktop
         private async Task<StreamManifest> RetrieveStreamManifest(string videoId, YoutubeClient client)
         {
             var video = await client.Videos.GetAsync(videoId);
-            videoTitle = video.Title;
-            videoAuthor = video.Author.Title;
+            VideoTitle = video.Title;
+            VideoAuthor = video.Author.Title;
             return await client.Videos.Streams.GetManifestAsync(videoId);
 
         }
 
         private async Task DownloadAudio(YoutubeClient client, IStreamInfo streamInfo)
         {
-            string downloadPath = Properties.Settings.Default.MusicPath + @$"\{videoTitle}.mp3";
+            string downloadPath = Properties.Settings.Default.MusicPath + @$"\{VideoTitle}.mp3";
             await client.Videos.Streams.DownloadAsync(streamInfo, downloadPath);
         }
         private void ReloadButton_Click(object sender, RoutedEventArgs e)
