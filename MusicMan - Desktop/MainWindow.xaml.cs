@@ -37,7 +37,7 @@ namespace MusicMan___Desktop
 
         private async void DownloadBtn_Click(object sender, RoutedEventArgs e)
         {
-            string videoId = UrlLbl.Text.Contains("watch?v=")? UrlLbl.Text.Substring(UrlLbl.Text.LastIndexOf("=", StringComparison.OrdinalIgnoreCase)+1) : throw new NullReferenceException("Invalid Url!");
+            string videoId = UrlLbl.Text.Contains("watch?v=") ? UrlLbl.Text.Substring(UrlLbl.Text.LastIndexOf("=", StringComparison.OrdinalIgnoreCase) + 1) : throw new NullReferenceException("Invalid Url!");
 
             //if (string.IsNullOrEmpty(videoUrl))
             //{
@@ -64,7 +64,7 @@ namespace MusicMan___Desktop
 
             YoutubeClient youtubeClient = new YoutubeClient();
             StreamManifest manifest;
-           
+
 
             try
             {
@@ -139,13 +139,13 @@ namespace MusicMan___Desktop
                 foreach (var song in songs)
                 {
                     var file = TagLib.File.Create(song);
-                    
-                   
+
+
                     Music currentSong = new Music
                     {
                         FilePath = song,
                         Title = System.IO.Path.GetFileName(song).Replace(".mp3", ""),
-                        Author = file.Tag.AlbumArtists!= null ? file.Tag.AlbumArtists.FirstOrDefault() : ""
+                        Author = file.Tag.AlbumArtists != null ? file.Tag.AlbumArtists.FirstOrDefault() : ""
                     };
 
                     musicList.Add(currentSong);
