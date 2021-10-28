@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 using System.IO;
+using TagLib;
 
 namespace MusicMan___Desktop
 {
@@ -26,18 +27,19 @@ namespace MusicMan___Desktop
 
         string VideoTitle { get; set; }
         string VideoAuthor { get; set; }
+        string VideoImageUrl { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
-
             ReloadSongs();
+            
 
         }
 
         private async void DownloadBtn_Click(object sender, RoutedEventArgs e)
         {
-            string videoId = UrlLbl.Text.Contains("watch?v=") ? UrlLbl.Text.Substring(UrlLbl.Text.LastIndexOf("=", StringComparison.OrdinalIgnoreCase) + 1) : throw new NullReferenceException("Invalid Url!");
+            string videoId = UrlLbl.Text.Contains("https://www.youtube.com/watch?v=") ? UrlLbl.Text.Substring(UrlLbl.Text.LastIndexOf("=", StringComparison.OrdinalIgnoreCase) + 1) : throw new NullReferenceException("Invalid Url!");
 
             //if (string.IsNullOrEmpty(videoUrl))
             //{
@@ -84,6 +86,7 @@ namespace MusicMan___Desktop
                 var downloadPath = Properties.Settings.Default.MusicPath + @$"\{VideoTitle}.mp3";
                 var file = TagLib.File.Create(downloadPath);
                 file.Tag.AlbumArtists = new[] { $"{VideoAuthor}" };
+                file.Tag.Comment = VideoImageUrl;
                 file.Save();
 
             }
@@ -117,6 +120,8 @@ namespace MusicMan___Desktop
             var video = await client.Videos.GetAsync(videoId);
             VideoTitle = video.Title;
             VideoAuthor = video.Author.Title;
+            VideoImageUrl = video.Thumbnails.FirstOrDefault()?.Url;
+            
             return await client.Videos.Streams.GetManifestAsync(videoId);
 
         }
@@ -145,13 +150,14 @@ namespace MusicMan___Desktop
                     {
                         FilePath = song,
                         Title = System.IO.Path.GetFileName(song).Replace(".mp3", ""),
-                        Author = file.Tag.AlbumArtists != null ? file.Tag.AlbumArtists.FirstOrDefault() : ""
+                        Author = file.Tag.AlbumArtists != null ? file.Tag.AlbumArtists.FirstOrDefault() : "",
+                        ImageUrl = file.Tag.Comment ?? ""
                     };
 
                     musicList.Add(currentSong);
                 }
             }
-            lvSongs.ItemsSource = musicList;
+            LvSongs.ItemsSource = musicList;
         }
 
 

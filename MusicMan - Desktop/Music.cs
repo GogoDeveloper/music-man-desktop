@@ -11,6 +11,7 @@ namespace MusicMan___Desktop
         public string Title { get; set; }
         public string FilePath { get; set; }
         public string Author { get; set; }
+        public string ImageUrl { get; set; }
         public TimeSpan Length { get; set; }
     }
 }

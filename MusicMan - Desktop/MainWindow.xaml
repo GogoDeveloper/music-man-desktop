@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicMan___Desktop"
         mc:Ignorable="d"
-        Title="MusicMan" Height="450" Width="800">
+        Title="MusicMan" Height="450" Width="800" WindowState="Maximized">
     <Grid Background="#FF404040">
         <TabControl>
             <TabItem Header="Music">
@@ -20,25 +20,22 @@
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="4" Name="ReloadButton" Click="ReloadButton_Click">Reload</Button>
                     </Grid>
-                    <ListView Name="lvSongs">
-                        <ListView.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="1"/>
-                                <SkewTransform AngleX="-0.422"/>
-                                <RotateTransform/>
-                                <TranslateTransform X="1.327"/>
-                            </TransformGroup>
-                        </ListView.RenderTransform>
+                    <ListView Name="LvSongs" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" MinHeight="350" MinWidth="794">
                         <ListView.ItemTemplate>
                             <DataTemplate DataType="local:Music">
                                 <StackPanel Grid.IsSharedSizeScope="False">
-                                    <!--<Image Source="{Binding ImageUrl}"></Image>-->
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{Binding ImageUrl}"></Image>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Title}" FontWeight="Bold"></TextBlock>
+                                            <TextBlock Text="{Binding Author}" FontWeight="ExtraLight" ></TextBlock>
 
-                                    <TextBlock Text="{Binding Title}" FontWeight="Bold"></TextBlock>
-                                    <TextBlock Text="{Binding Author}" FontWeight="ExtraLight" ></TextBlock>
 
-
-                                    <TextBlock Text="{Binding FilePath}"></TextBlock>
+                                            <TextBlock Text="{Binding FilePath}"></TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    
+                                    
 
                                     <!--<TextBlock Text="{Binding Length}"></TextBlock>-->
                                 </StackPanel>
