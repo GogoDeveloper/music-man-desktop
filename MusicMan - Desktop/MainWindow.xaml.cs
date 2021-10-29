@@ -26,29 +26,6 @@ namespace MusicMan___Desktop
         {
             string videoId = UrlLbl.Text.Contains("https://www.youtube.com/watch?v=") ? UrlLbl.Text.Substring(UrlLbl.Text.LastIndexOf("=", StringComparison.OrdinalIgnoreCase) + 1) : throw new NullReferenceException("Invalid Url!");
 
-            //if (string.IsNullOrEmpty(videoUrl))
-            //{
-            //    MessageBox.Show("Input cannot be empty!", "No Url detected.", MessageBoxButton.OK, MessageBoxImage.Error);
-            //    return;
-            //}
-
-
-            //if (new Uri(videoUrl).Host != "www.youtube.com")
-            //{
-            //    MessageBox.Show("The link you've entered is invalid!", "Invalid Url detected", MessageBoxButton.OK, MessageBoxImage.Error);
-            //    return;
-            //}
-
-
-            //string videoId =  RetrieveVideoId(videoUrl);
-
-            //if (string.IsNullOrEmpty(videoId))
-            //{
-            //    MessageBox.Show("The link you've entered is invalid!", "Invalid Url detected", MessageBoxButton.OK, MessageBoxImage.Error);
-            //    return;
-            //}
-
-
             YoutubeClient youtubeClient = new YoutubeClient();
             StreamManifest manifest;
 
@@ -70,7 +47,6 @@ namespace MusicMan___Desktop
                 var video = await youtubeClient.Videos.GetAsync(videoId);
                 var downloadPath = Properties.Settings.Default.MusicPath + @$"\{video.Title}.mp3";
                 await DownloadAudio(youtubeClient, audioStream, downloadPath);
-                
 
             }
             catch (Exception)
@@ -80,23 +56,6 @@ namespace MusicMan___Desktop
 
             UrlLbl.Text = "";
         }
-
-        //private string RetrieveVideoId(string videoUrl)
-        //{
-        //    string[] videoParts = videoUrl.Split("/watch?v=");
-        //    string videoId;
-
-        //    try
-        //    {
-        //        videoId = videoParts[1];
-        //    }
-        //    catch
-        //    {
-        //        return null;
-        //    }
-
-        //    return videoId;
-        //}
 
         private async Task<StreamManifest> RetrieveStreamManifest(string videoId, YoutubeClient client)
         {
@@ -137,3 +96,41 @@ namespace MusicMan___Desktop
 
     }
 }
+//private string RetrieveVideoId(string videoUrl)
+//{
+//    string[] videoParts = videoUrl.Split("/watch?v=");
+//    string videoId;
+
+//    try
+//    {
+//        videoId = videoParts[1];
+//    }
+//    catch
+//    {
+//        return null;
+//    }
+
+//    return videoId;
+//}
+
+//if (string.IsNullOrEmpty(videoUrl))
+//{
+//    MessageBox.Show("Input cannot be empty!", "No Url detected.", MessageBoxButton.OK, MessageBoxImage.Error);
+//    return;
+//}
+
+
+//if (new Uri(videoUrl).Host != "www.youtube.com")
+//{
+//    MessageBox.Show("The link you've entered is invalid!", "Invalid Url detected", MessageBoxButton.OK, MessageBoxImage.Error);
+//    return;
+//}
+
+
+//string videoId =  RetrieveVideoId(videoUrl);
+
+//if (string.IsNullOrEmpty(videoId))
+//{
+//    MessageBox.Show("The link you've entered is invalid!", "Invalid Url detected", MessageBoxButton.OK, MessageBoxImage.Error);
+//    return;
+//}
