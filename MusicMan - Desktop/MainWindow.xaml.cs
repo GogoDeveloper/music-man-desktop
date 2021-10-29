@@ -1,21 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 using System.IO;
-using TagLib;
+
 
 namespace MusicMan___Desktop
 {
@@ -24,17 +15,11 @@ namespace MusicMan___Desktop
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        string VideoTitle { get; set; }
-        string VideoAuthor { get; set; }
-        string VideoImageUrl { get; set; }
-
+        List<Music> musicList;
         public MainWindow()
         {
             InitializeComponent();
             ReloadSongs();
-            
-
         }
 
         private async void DownloadBtn_Click(object sender, RoutedEventArgs e)
@@ -82,12 +67,10 @@ namespace MusicMan___Desktop
 
             try
             {
-                await DownloadAudio(youtubeClient, audioStream);
-                var downloadPath = Properties.Settings.Default.MusicPath + @$"\{VideoTitle}.mp3";
-                var file = TagLib.File.Create(downloadPath);
-                file.Tag.AlbumArtists = new[] { $"{VideoAuthor}" };
-                file.Tag.Comment = VideoImageUrl;
-                file.Save();
+                var video = await youtubeClient.Videos.GetAsync(videoId);
+                var downloadPath = Properties.Settings.Default.MusicPath + @$"\{video.Title}.mp3";
+                await DownloadAudio(youtubeClient, audioStream, downloadPath);
+                
 
             }
             catch (Exception)
@@ -117,18 +100,12 @@ namespace MusicMan___Desktop
 
         private async Task<StreamManifest> RetrieveStreamManifest(string videoId, YoutubeClient client)
         {
-            var video = await client.Videos.GetAsync(videoId);
-            VideoTitle = video.Title;
-            VideoAuthor = video.Author.Title;
-            VideoImageUrl = video.Thumbnails.FirstOrDefault()?.Url;
-            
             return await client.Videos.Streams.GetManifestAsync(videoId);
 
         }
 
-        private async Task DownloadAudio(YoutubeClient client, IStreamInfo streamInfo)
+        private async Task DownloadAudio(YoutubeClient client, IStreamInfo streamInfo, string downloadPath)
         {
-            string downloadPath = Properties.Settings.Default.MusicPath + @$"\{VideoTitle}.mp3";
             await client.Videos.Streams.DownloadAsync(streamInfo, downloadPath);
         }
         private void ReloadButton_Click(object sender, RoutedEventArgs e)
@@ -137,23 +114,20 @@ namespace MusicMan___Desktop
         }
         private void ReloadSongs()
         {
-            List<Music> musicList = new List<Music>();
+            musicList = new List<Music>();
             List<string> songs = Directory.GetFiles(Properties.Settings.Default.MusicPath, "*.mp3").ToList();
             if (songs.Any())
             {
                 foreach (var song in songs)
                 {
-                    var file = TagLib.File.Create(song);
-
-
+                    
                     Music currentSong = new Music
                     {
                         FilePath = song,
-                        Title = System.IO.Path.GetFileName(song).Replace(".mp3", ""),
-                        Author = file.Tag.AlbumArtists != null ? file.Tag.AlbumArtists.FirstOrDefault() : "",
-                        ImageUrl = file.Tag.Comment ?? ""
+                        Title = Path.GetFileName(song).Replace(".mp3", ""),
+                        Artist = "",
+                        ImageUrl =  ""
                     };
-
                     musicList.Add(currentSong);
                 }
             }

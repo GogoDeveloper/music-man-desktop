@@ -28,7 +28,7 @@
                                         <Image Source="{Binding ImageUrl}"></Image>
                                         <StackPanel>
                                             <TextBlock Text="{Binding Title}" FontWeight="Bold"></TextBlock>
-                                            <TextBlock Text="{Binding Author}" FontWeight="ExtraLight" ></TextBlock>
+                                            <TextBlock Text="{Binding Artist}" FontWeight="ExtraLight" ></TextBlock>
 
 
                                             <TextBlock Text="{Binding FilePath}"></TextBlock>
