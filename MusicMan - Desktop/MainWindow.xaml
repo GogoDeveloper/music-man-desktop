@@ -24,7 +24,7 @@
                         <ListView.ItemTemplate>
                             <DataTemplate DataType="local:Music">
                                 <StackPanel Grid.IsSharedSizeScope="False">
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" MouseLeftButtonDown="LeftClickSong">
                                         <Image Source="{Binding ImageUrl}"></Image>
                                         <StackPanel>
                                             <TextBlock Text="{Binding Title}" FontWeight="Bold"></TextBlock>

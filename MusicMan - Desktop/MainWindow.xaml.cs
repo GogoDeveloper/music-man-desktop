@@ -6,6 +6,9 @@ using System.Windows;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 using System.IO;
+using System.Windows.Input;
+using System.Windows.Media;
+using AngleSharp.Common;
 
 
 namespace MusicMan___Desktop
@@ -15,11 +18,11 @@ namespace MusicMan___Desktop
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<Music> musicList;
+
         public MainWindow()
         {
             InitializeComponent();
-            ReloadSongs();
+            ReloadSongsAsync();
         }
 
         private async void DownloadBtn_Click(object sender, RoutedEventArgs e)
@@ -69,31 +72,53 @@ namespace MusicMan___Desktop
         }
         private void ReloadButton_Click(object sender, RoutedEventArgs e)
         {
-            ReloadSongs();
+            ReloadSongsAsync();
         }
-        private void ReloadSongs()
+        private async Task ReloadSongsAsync()
         {
-            musicList = new List<Music>();
+            YoutubeClient youtubeClient = new YoutubeClient();
+
+            List<Music> musicList = new List<Music>();
             List<string> songs = Directory.GetFiles(Properties.Settings.Default.MusicPath, "*.mp3").ToList();
             if (songs.Any())
             {
                 foreach (var song in songs)
                 {
-                    
-                    Music currentSong = new Music
+                    var songTitle = Path.GetFileName(song).Replace(".mp3", "");
+                    await foreach (var result in youtubeClient.Search.GetVideosAsync(songTitle))
                     {
-                        FilePath = song,
-                        Title = Path.GetFileName(song).Replace(".mp3", ""),
-                        Artist = "",
-                        ImageUrl =  ""
-                    };
-                    musicList.Add(currentSong);
+                        if (result.Title.Trim() == songTitle.Trim())
+                        {
+                            Music currentSong = new Music
+                            {
+                                FilePath = song,
+                                Title = songTitle,
+                                Artist = result.Author.Title ?? "",
+                                ImageUrl = result.Thumbnails.FirstOrDefault()?.Url
+                            };
+                            musicList.Add(currentSong);
+                            break;
+                        }
+
+                    }
+
+
+
                 }
             }
             LvSongs.ItemsSource = musicList;
         }
 
 
+        private void LeftClickSong(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                MediaPlayer mediaPlayer = new MediaPlayer();
+                mediaPlayer.Open(new Uri(Properties.Settings.Default.MusicPath + "\\Eminem - Without Me (Official Music Video).mp3"));
+                mediaPlayer.Play();
+            }
+        }
     }
 }
 //private string RetrieveVideoId(string videoUrl)
