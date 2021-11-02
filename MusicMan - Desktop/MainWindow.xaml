@@ -23,22 +23,19 @@
                     <ListView Name="LvSongs" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" MinHeight="350" MinWidth="794">
                         <ListView.ItemTemplate>
                             <DataTemplate DataType="local:Music">
-                                <StackPanel Grid.IsSharedSizeScope="False">
-                                    <StackPanel Orientation="Horizontal" MouseLeftButtonDown="LeftClickSong">
-                                        <Image Source="{Binding ImageUrl}"></Image>
-                                        <StackPanel>
-                                            <TextBlock Text="{Binding Title}" FontWeight="Bold"></TextBlock>
-                                            <TextBlock Text="{Binding Artist}" FontWeight="ExtraLight" ></TextBlock>
+                                <ListViewItem MouseDoubleClick="LeftClickSong">
+                                        <StackPanel Orientation="Horizontal" >
+                                            <Image Source="{Binding ImageUrl}"></Image>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Title}" FontWeight="Bold"></TextBlock>
+                                                <TextBlock Text="{Binding Artist}" FontWeight="ExtraLight" ></TextBlock>
 
 
-                                            <TextBlock Text="{Binding FilePath}"></TextBlock>
+                                                <TextBlock Text="{Binding FilePath}"></TextBlock>
+                                            </StackPanel>
                                         </StackPanel>
-                                    </StackPanel>
-                                    
-                                    
-
+                                    </ListViewItem>
                                     <!--<TextBlock Text="{Binding Length}"></TextBlock>-->
-                                </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
 

@@ -9,7 +9,7 @@ using System.IO;
 using System.Windows.Input;
 using System.Windows.Media;
 using AngleSharp.Common;
-
+using System.Windows.Controls;
 
 namespace MusicMan___Desktop
 {
@@ -99,11 +99,7 @@ namespace MusicMan___Desktop
                             musicList.Add(currentSong);
                             break;
                         }
-
                     }
-
-
-
                 }
             }
             LvSongs.ItemsSource = musicList;
@@ -112,12 +108,13 @@ namespace MusicMan___Desktop
 
         private void LeftClickSong(object sender, MouseButtonEventArgs e)
         {
-            if (e.ClickCount == 2)
-            {
-                MediaPlayer mediaPlayer = new MediaPlayer();
-                mediaPlayer.Open(new Uri(Properties.Settings.Default.MusicPath + "\\Eminem - Without Me (Official Music Video).mp3"));
-                mediaPlayer.Play();
-            }
+            ListViewItem lvItem = (ListViewItem)sender;
+
+            Music song = (Music)lvItem.DataContext;
+
+            MediaPlayer mediaPlayer = new MediaPlayer();
+            mediaPlayer.Open(new Uri(song.FilePath));
+            mediaPlayer.Play();
         }
     }
 }
