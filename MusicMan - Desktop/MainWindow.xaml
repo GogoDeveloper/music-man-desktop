@@ -44,8 +44,10 @@
 
 
             </TabItem>
-            <TabItem Header="Playlist">
-
+            <TabItem Header="Playlist" GotFocus="PlaylistTab_Focus">
+                <ListView Name="Playlists_Lv">
+                    
+                </ListView>
             </TabItem>
             <TabItem Header="Download" Height="20" VerticalAlignment="Top">
                 <Grid>

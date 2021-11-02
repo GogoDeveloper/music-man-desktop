@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using AngleSharp.Common;
 using System.Windows.Controls;
+using System.Xml.Linq;
 
 namespace MusicMan___Desktop
 {
@@ -115,6 +116,43 @@ namespace MusicMan___Desktop
             MediaPlayer mediaPlayer = new MediaPlayer();
             mediaPlayer.Open(new Uri(song.FilePath));
             mediaPlayer.Play();
+        }
+
+        private void PlaylistTab_Focus(object sender, RoutedEventArgs e)
+        {
+            List<Playlist> playlists = GetAllPlaylists();
+        }
+
+        private List<Playlist> GetAllPlaylists()
+        {
+            XDocument doc = XDocument.Load(Properties.Settings.Default.MusicPath + "/Playlists.xml");
+            List<Playlist> playlists = new List<Playlist>();
+
+            foreach (XElement element in doc.Root.Elements())
+            {
+                Playlist playlist = new Playlist();
+                List<Music> songs = new List<Music>();
+
+                playlist.Name = element.Name.ToString();
+
+                foreach (XElement songElement in element.Elements())
+                {
+                    Music song = new Music();
+
+                    XName name = "Artist";
+                    song.Artist = songElement.Attribute(name).Value;
+                    name = "FilePath";
+                    song.FilePath = songElement.Attribute(name).Value;
+                    name = "ImageUrl";
+                    song.ImageUrl = songElement.Attribute(name).Value;
+                    //name = "Length";
+                    //song.Length = songElement.Attribute(name).Value;
+                    name = "Title";
+                    song.Title = songElement.Attribute(name).Value;
+                }
+            }
+
+            return null;
         }
     }
 }
