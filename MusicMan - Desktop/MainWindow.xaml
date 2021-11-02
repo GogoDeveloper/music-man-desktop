@@ -10,7 +10,7 @@
         <TabControl>
             <TabItem Header="Music">
                 <StackPanel Background="#FF8F8F8F">
-                    <Grid>
+                    <Grid >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
@@ -18,13 +18,18 @@
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="4" Name="ReloadButton" Click="ReloadButton_Click">Reload</Button>
-                    </Grid>
-                    <ListView Name="LvSongs" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" MinHeight="350" MinWidth="794">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"></RowDefinition>
+                            <RowDefinition Height="3*"></RowDefinition>
+                            <RowDefinition Height="1*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Button Grid.Row="0" Grid.Column="4" Name="ReloadButton" Click="ReloadButton_Click">Reload</Button>
+                    
+                    <ListView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5" Name="LvSongs" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" MinWidth="794" MaxHeight="800" MinHeight="300">
                         <ListView.ItemTemplate>
                             <DataTemplate DataType="local:Music">
-                                <ListViewItem MouseDoubleClick="LeftClickSong">
-                                        <StackPanel Orientation="Horizontal" >
+                                <ListViewItem MouseDoubleClick="DoubleClickPlay">
+                                    <StackPanel Orientation="Horizontal" >
                                             <Image Source="{Binding ImageUrl}"></Image>
                                             <StackPanel>
                                                 <TextBlock Text="{Binding Title}" FontWeight="Bold"></TextBlock>
@@ -40,6 +45,10 @@
                         </ListView.ItemTemplate>
 
                     </ListView>
+                        <MediaElement Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" Height="39" Width="795" Name="mePlayer" />
+                        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5"/>
+                    </Grid>
+                    
                 </StackPanel>
 
 

@@ -94,7 +94,8 @@ namespace MusicMan___Desktop
                                 FilePath = song,
                                 Title = songTitle,
                                 Artist = result.Author.Title ?? "",
-                                ImageUrl = result.Thumbnails.FirstOrDefault()?.Url
+                                ImageUrl = result.Thumbnails.FirstOrDefault()?.Url,
+                                Duration = (TimeSpan)result.Duration
                             };
                             musicList.Add(currentSong);
                             break;
@@ -106,13 +107,16 @@ namespace MusicMan___Desktop
         }
 
 
-        private void LeftClickSong(object sender, MouseButtonEventArgs e)
+        private void DoubleClickPlay(object sender, MouseButtonEventArgs e)
         {
+            
+            
             ListViewItem lvItem = (ListViewItem)sender;
 
             Music song = (Music)lvItem.DataContext;
 
             MediaPlayer mediaPlayer = new MediaPlayer();
+            mePlayer.Source = new Uri(song.FilePath);
             mediaPlayer.Open(new Uri(song.FilePath));
             mediaPlayer.Play();
         }
