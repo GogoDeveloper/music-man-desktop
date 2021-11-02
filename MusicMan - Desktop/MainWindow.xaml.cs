@@ -95,7 +95,7 @@ namespace MusicMan___Desktop
                                 Title = songTitle,
                                 Artist = result.Author.Title ?? "",
                                 ImageUrl = result.Thumbnails.FirstOrDefault()?.Url,
-                                Duration = (TimeSpan)result.Duration
+                                Duration = result.Duration.ToString()
                             };
                             musicList.Add(currentSong);
                             break;

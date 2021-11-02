@@ -46,7 +46,13 @@
 
                     </ListView>
                         <MediaElement Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" Height="39" Width="795" Name="mePlayer" />
-                        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5"/>
+                        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5">
+                            <Label Name="lbCurrentSong"></Label>
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="btnPlay">Play</Button>
+                                
+                            </StackPanel>
+                        </StackPanel>
                     </Grid>
                     
                 </StackPanel>
