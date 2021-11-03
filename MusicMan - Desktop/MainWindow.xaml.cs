@@ -210,6 +210,33 @@ namespace MusicMan___Desktop
         {
 
         }
+
+        private void DelPlaylist_Btn(object sender, RoutedEventArgs e)
+        {
+            if (Playlists_Lv.SelectedItem == null)
+            {
+                return;
+            }
+
+            ListViewItem selectedPlaylist = (ListViewItem)Playlists_Lv.SelectedItem;
+
+            RemovePlaylistFromXml(selectedPlaylist.Content.ToString());
+
+            Playlists_Lv.Items.Remove(selectedPlaylist);
+        }
+
+        private void RemovePlaylistFromXml(string playlistName)
+        {
+            XDocument doc = XDocument.Load(Properties.Settings.Default.MusicPath + "/Playlists.xml");
+
+            doc.Root.Element(playlistName).RemoveNodes();
+
+            var q = from node in doc.Descendants(playlistName)
+                    select node;
+            q.ToList().ForEach(x => x.Remove());
+
+            doc.Save(Properties.Settings.Default.MusicPath + "/Playlists.xml");
+        }
     }
 }
 //private string RetrieveVideoId(string videoUrl)

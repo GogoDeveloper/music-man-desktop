@@ -67,6 +67,7 @@
             <TabItem Header="Playlist" Selector.Selected="PlaylistTab_Focus">
                 <Grid>
                     <Button Width="30" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Content="+" Click="NewPlaylist_Btn"/>
+                    <Button Width="30" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Content="-" Margin="0,0,30,0" Click="DelPlaylist_Btn"/>
                     <ListView Name="Playlists_Lv" Margin="0,20,0,0">
 
                     </ListView>
