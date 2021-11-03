@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicMan___Desktop"
         mc:Ignorable="d"
-        Title="MusicMan" Height="450" Width="800" WindowState="Maximized">
+        Title="MusicMan" Height="450" Width="800" WindowState="Maximized" >
     <Grid Background="#FF404040">
         <TabControl>
             <TabItem Header="Music">
@@ -26,8 +26,23 @@
                         <Button Grid.Row="0" Grid.Column="4" Name="ReloadButton" Click="ReloadButton_Click">Reload</Button>
                     
                     <ListView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5" Name="LvSongs" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" MinWidth="794" MaxHeight="800" MinHeight="300">
-                            <ListView.ItemTemplate>
-                                <DataTemplate DataType="local:Music">
+                        <ListView.View>
+                            <GridView>
+                                    
+                                <GridViewColumn Header="Thumbnail" Width="120">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding ImageUrl}"></Image>
+                                            </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" Width="auto"></GridViewColumn>
+                                <GridViewColumn Header="Artist" DisplayMemberBinding="{Binding Artist}" Width="auto"></GridViewColumn>
+                                <GridViewColumn Header="Path" DisplayMemberBinding="{Binding FilePath}" Width="auto"></GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                        <!--<ListView.ItemTemplate>
+                                <DataTemplate DataType="local:Music">--><!--
                                 <ListViewItem MouseDoubleClick="DoubleClickPlay" MinWidth="794">
                                    
                                     <StackPanel Orientation="Horizontal">
@@ -41,20 +56,20 @@
                                             </StackPanel>
                                         </StackPanel>
                                     </ListViewItem>
-                                    <!--<TextBlock Text="{Binding Length}"></TextBlock>-->
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
+                                    --><!--<TextBlock Text="{Binding Length}"></TextBlock>-->
+                            <!--</DataTemplate>
+                        </ListView.ItemTemplate>-->
 
                     </ListView>
-                        <MediaElement Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" Height="39" Width="795" Name="mePlayer" />
+                        <MediaElement Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" Height="39" Width="795" Name="MePlayer" />
                         <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" HorizontalAlignment="Center">
-                            <Image x:Name="imgThumbnail" MaxHeight="150" MaxWidth="150" Stretch="None" RenderOptions.BitmapScalingMode="HighQuality"></Image>
-                            <Label Name="lbCurrentSong" Foreground="#FF919191" ></Label>
+                            <Image x:Name="ImgThumbnail" MaxHeight="150" MaxWidth="150" Stretch="None" RenderOptions.BitmapScalingMode="HighQuality"></Image>
+                            <Label Name="LbCurrentSong" Foreground="#FF919191" ></Label>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button x:Name="btnPrev" Click="BtnPrev_Click">Previous</Button>
-                                <Button x:Name="btnPlay" Click="BtnPlay_Click">Play</Button>
-                                <Button x:Name="btnPause" Click="BtnPause_Click">Pause</Button>
-                                <Button x:Name="btnNext" Click="BtnNext_Click">Next</Button>
+                                <Button x:Name="BtnPrev" Click="BtnPrev_Click">Previous</Button>
+                                <Button x:Name="BtnPlay" Click="BtnPlay_Click">Play</Button>
+                                <Button x:Name="BtnPause" Click="BtnPause_Click">Pause</Button>
+                                <Button x:Name="BtnNext" Click="BtnNext_Click">Next</Button>
                                 
                             </StackPanel>
                         </StackPanel>
@@ -67,7 +82,7 @@
             <TabItem Header="Playlist" Selector.Selected="PlaylistTab_Focus">
                 <Grid>
                     <Button Width="30" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Content="+" Click="NewPlaylist_Btn"/>
-                    <ListView Name="Playlists_Lv" Margin="0,20,0,0">
+                    <ListView Name="PlaylistsLv" Margin="0,20,0,0">
 
                     </ListView>
                 </Grid>
