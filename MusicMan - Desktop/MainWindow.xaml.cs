@@ -186,6 +186,13 @@ namespace MusicMan___Desktop
 
         }
 
+        private void NewPlaylist_Btn(object sender, RoutedEventArgs e)
+        {
+            AddPlaylist addPlaylistDialog = new AddPlaylist();
+
+            addPlaylistDialog.ShowDialog();
+        }
+
         private void BtnPlay_Click(object sender, RoutedEventArgs e)
         {
             if (mePlayer.IsLoaded)
