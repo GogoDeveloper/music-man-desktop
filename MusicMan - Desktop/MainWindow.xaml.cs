@@ -11,6 +11,7 @@ using System.Windows.Media;
 using AngleSharp.Common;
 using System.Windows.Controls;
 using System.Xml.Linq;
+using System.Windows.Media.Imaging;
 
 namespace MusicMan___Desktop
 {
@@ -115,11 +116,16 @@ namespace MusicMan___Desktop
             ListViewItem lvItem = (ListViewItem)sender;
 
             Music song = (Music)lvItem.DataContext;
-
-            MediaPlayer mediaPlayer = new MediaPlayer();
+            lbCurrentSong.Content = song.Title;
+            imgThumbnail.Source = new BitmapImage(new Uri(song.ImageUrl));
+            
             //mePlayer.Source = new Uri(song.FilePath);
-            mediaPlayer.Open(new Uri(song.FilePath));
-            mediaPlayer.Play();
+            if (mePlayer.IsLoaded)
+            {
+                mePlayer.LoadedBehavior = MediaState.Manual;
+                mePlayer.Play();
+            }
+            
         }
 
         private void PlaylistTab_Focus(object sender, RoutedEventArgs e)
@@ -175,10 +181,27 @@ namespace MusicMan___Desktop
             return playlists;
         }
 
-        private void NewPlaylist_Btn(object sender, RoutedEventArgs e)
+        private void BtnPrev_Click(object sender, RoutedEventArgs e)
         {
-            AddPlaylist addPlaylistDialog = new AddPlaylist();
-            addPlaylistDialog.ShowDialog();
+
+        }
+
+        private void BtnPlay_Click(object sender, RoutedEventArgs e)
+        {
+            if (mePlayer.IsLoaded)
+            {
+                mePlayer.Play();
+            }
+        }
+
+        private void BtnPause_Click(object sender, RoutedEventArgs e)
+        {
+            mePlayer.Pause();
+        }
+
+        private void BtnNext_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
