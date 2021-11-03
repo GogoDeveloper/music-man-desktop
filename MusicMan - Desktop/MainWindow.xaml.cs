@@ -221,16 +221,16 @@ namespace MusicMan___Desktop
 
         private void DelPlaylist_Btn(object sender, RoutedEventArgs e)
         {
-            if (Playlists_Lv.SelectedItem == null)
+            if (PlaylistsLv.SelectedItem == null)
             {
                 return;
             }
 
-            ListViewItem selectedPlaylist = (ListViewItem)Playlists_Lv.SelectedItem;
+            ListViewItem selectedPlaylist = (ListViewItem)PlaylistsLv.SelectedItem;
 
             RemovePlaylistFromXml(selectedPlaylist.Content.ToString());
 
-            Playlists_Lv.Items.Remove(selectedPlaylist);
+            PlaylistsLv.Items.Remove(selectedPlaylist);
         }
 
         private void RemovePlaylistFromXml(string playlistName)
