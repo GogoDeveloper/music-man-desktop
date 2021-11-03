@@ -10,7 +10,7 @@
         <TextBlock Width="200" Height="50" VerticalAlignment="Top" HorizontalAlignment="Center" TextAlignment="Center" FontWeight="Bold" FontSize="30" Text="New Playlist" Margin="0,10,0,0"/>
         <TextBlock Width="100" Height="30" VerticalAlignment="Top" HorizontalAlignment="Center" TextAlignment="Center" FontWeight="Bold" FontSize="20" Text="Name" Margin="0,70,0,0"/>
 
-        <TextBox TextAlignment="Center" Width="150" Height="30" Margin="0,30,0,0" Name="PlaylistName_Tb" FontSize="20"/>
+        <TextBox TextAlignment="Center" Width="150" Height="30" Margin="0,30,0,0" Name="PlaylistNameTb" FontSize="20"/>
         <Button Width="70" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="20" Content="Create" Margin="80,0,0,40" Click="Create_Btn"/>
         <Button Width="70" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="20" Content="Abort" Margin="0,0,80,40" Click="Abort_Btn"/>
     </Grid>

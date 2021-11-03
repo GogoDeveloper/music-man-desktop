@@ -27,14 +27,14 @@ namespace MusicMan___Desktop
 
         private void Create_Btn(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(PlaylistName_Tb.Text))
+            if (string.IsNullOrEmpty(PlaylistNameTb.Text))
             {
                 return;
             }
 
             XDocument doc = XDocument.Load(Properties.Settings.Default.MusicPath + "/Playlists.xml");
 
-            XElement newPlaylist = new XElement(PlaylistName_Tb.Text);
+            XElement newPlaylist = new XElement(PlaylistNameTb.Text);
 
             doc.Root.Add(newPlaylist);
             doc.Save(Properties.Settings.Default.MusicPath + "/Playlists.xml");

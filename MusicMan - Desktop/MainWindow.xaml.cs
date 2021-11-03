@@ -20,7 +20,7 @@ namespace MusicMan___Desktop
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        private List<Music> musicList;
         public MainWindow()
         {
             InitializeComponent();
@@ -101,7 +101,7 @@ namespace MusicMan___Desktop
         {
             YoutubeClient youtubeClient = new YoutubeClient();
 
-            List<Music> musicList = new List<Music>();
+            musicList = new List<Music>();
             List<string> songs = Directory.GetFiles(Properties.Settings.Default.MusicPath, "*.mp3").ToList();
             if (songs.Any())
             {
@@ -130,28 +130,16 @@ namespace MusicMan___Desktop
         }
 
 
-        private void DoubleClickPlay(object sender, MouseButtonEventArgs e)
+        private void DoubleClickPlay(object sender, RoutedEventArgs e)
         {
             
             
-            ListViewItem lvItem = (ListViewItem)sender;
-
-            Music song = (Music)lvItem.DataContext;
-            lbCurrentSong.Content = song.Title;
-            imgThumbnail.Source = new BitmapImage(new Uri(song.ImageUrl));
-            
-            //mePlayer.Source = new Uri(song.FilePath);
-            if (mePlayer.IsLoaded)
-            {
-                mePlayer.LoadedBehavior = MediaState.Manual;
-                mePlayer.Play();
-            }
             
         }
 
         private void PlaylistTab_Focus(object sender, RoutedEventArgs e)
         {
-            Playlists_Lv.Items.Clear();
+            PlaylistsLv.Items.Clear();
 
             List<Playlist> playlists = GetAllPlaylists();
 
@@ -160,7 +148,7 @@ namespace MusicMan___Desktop
                 ListViewItem lvItem = new ListViewItem();
                 lvItem.Content = playlist.Name;
 
-                Playlists_Lv.Items.Add(lvItem);
+                PlaylistsLv.Items.Add(lvItem);
             }
         }
 
@@ -216,15 +204,16 @@ namespace MusicMan___Desktop
 
         private void BtnPlay_Click(object sender, RoutedEventArgs e)
         {
-            if (mePlayer.IsLoaded)
+            if (MePlayer.IsLoaded)
             {
-                mePlayer.Play();
+                MePlayer.LoadedBehavior = MediaState.Manual;
+                MePlayer.Play();
             }
         }
 
         private void BtnPause_Click(object sender, RoutedEventArgs e)
         {
-            mePlayer.Pause();
+            MePlayer.Pause();
         }
 
         private void BtnNext_Click(object sender, RoutedEventArgs e)
@@ -232,18 +221,37 @@ namespace MusicMan___Desktop
 
         }
 
+        private void Mouse_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                ListViewItem lvItem = (ListViewItem)sender;
+
+                Music song = (Music)lvItem.DataContext;
+                LbCurrentSong.Content = song.Title;
+                ImgThumbnail.Source = new BitmapImage(new Uri(song.ImageUrl));
+
+                //mePlayer.Source = new Uri(song.FilePath);
+                if (MePlayer.IsLoaded)
+                {
+                    MePlayer.LoadedBehavior = MediaState.Manual;
+                    MePlayer.Play();
+                }
+            }
+        }
+
         private void DelPlaylist_Btn(object sender, RoutedEventArgs e)
         {
-            if (Playlists_Lv.SelectedItem == null)
+            if (PlaylistsLv.SelectedItem == null)
             {
                 return;
             }
 
-            ListViewItem selectedPlaylist = (ListViewItem)Playlists_Lv.SelectedItem;
+            ListViewItem selectedPlaylist = (ListViewItem)PlaylistsLv.SelectedItem;
 
             RemovePlaylistFromXml(selectedPlaylist.Content.ToString());
 
-            Playlists_Lv.Items.Remove(selectedPlaylist);
+            PlaylistsLv.Items.Remove(selectedPlaylist);
         }
 
         private void RemovePlaylistFromXml(string playlistName)
