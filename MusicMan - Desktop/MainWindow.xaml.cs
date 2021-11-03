@@ -117,14 +117,24 @@ namespace MusicMan___Desktop
             Music song = (Music)lvItem.DataContext;
 
             MediaPlayer mediaPlayer = new MediaPlayer();
-            mePlayer.Source = new Uri(song.FilePath);
+            //mePlayer.Source = new Uri(song.FilePath);
             mediaPlayer.Open(new Uri(song.FilePath));
             mediaPlayer.Play();
         }
 
         private void PlaylistTab_Focus(object sender, RoutedEventArgs e)
         {
+            Playlists_Lv.Items.Clear();
+
             List<Playlist> playlists = GetAllPlaylists();
+
+            foreach (Playlist playlist in playlists)
+            {
+                ListViewItem lvItem = new ListViewItem();
+                lvItem.Content = playlist.Name;
+
+                Playlists_Lv.Items.Add(lvItem);
+            }
         }
 
         private List<Playlist> GetAllPlaylists()
@@ -143,20 +153,32 @@ namespace MusicMan___Desktop
                 {
                     Music song = new Music();
 
-                    XName name = "Artist";
-                    song.Artist = songElement.Attribute(name).Value;
-                    name = "FilePath";
-                    song.FilePath = songElement.Attribute(name).Value;
-                    name = "ImageUrl";
-                    song.ImageUrl = songElement.Attribute(name).Value;
-                    //name = "Length";
-                    //song.Length = songElement.Attribute(name).Value;
-                    name = "Title";
-                    song.Title = songElement.Attribute(name).Value;
+                    //XName name = "Artist";
+                    //song.Artist = songElement.Attribute(name).Value;
+                    //name = "FilePath";
+                    //song.FilePath = songElement.Attribute(name).Value;
+                    //name = "ImageUrl";
+                    //song.ImageUrl = songElement.Attribute(name).Value;
+                    //name = "Duration";
+                    //song.Duration = songElement.Attribute(name).Value;
+                    //name = "Title";
+                    //song.Title = songElement.Attribute(name).Value;
+
+                    songs.Add(song);
                 }
+
+                playlist.Songs = songs;
+
+                playlists.Add(playlist);
             }
 
-            return null;
+            return playlists;
+        }
+
+        private void NewPlaylist_Btn(object sender, RoutedEventArgs e)
+        {
+            AddPlaylist addPlaylistDialog = new AddPlaylist();
+            addPlaylistDialog.ShowDialog();
         }
     }
 }

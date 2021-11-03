@@ -59,10 +59,13 @@
 
 
             </TabItem>
-            <TabItem Header="Playlist" GotFocus="PlaylistTab_Focus">
-                <ListView Name="Playlists_Lv">
-                    
-                </ListView>
+            <TabItem Header="Playlist" Selector.Selected="PlaylistTab_Focus">
+                <Grid>
+                    <Button Width="30" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Content="+" Click="NewPlaylist_Btn"/>
+                    <ListView Name="Playlists_Lv" Margin="0,20,0,0">
+
+                    </ListView>
+                </Grid>
             </TabItem>
             <TabItem Header="Download" Height="20" VerticalAlignment="Top">
                 <Grid>
