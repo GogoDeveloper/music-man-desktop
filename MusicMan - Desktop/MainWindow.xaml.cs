@@ -25,6 +25,27 @@ namespace MusicMan___Desktop
         {
             InitializeComponent();
             ReloadSongsAsync();
+
+            if (!PlaylistsXmlExisting())
+                CreatePlaylistsXml();
+        }
+
+        private void CreatePlaylistsXml()
+        {
+            XDocument doc = new XDocument();
+            XElement rootElement = new XElement("Playlists");
+
+            doc.Add(rootElement);
+
+            doc.Save(Properties.Settings.Default.MusicPath + "/Playlists.xml");
+        }
+
+        private bool PlaylistsXmlExisting()
+        {
+            if (File.Exists(Properties.Settings.Default.MusicPath + "/Playlists.xml"))
+                return true;
+
+            return false;
         }
 
         private async void DownloadBtn_Click(object sender, RoutedEventArgs e)
