@@ -21,18 +21,62 @@ namespace MusicMan___Desktop
     public partial class MainWindow : Window
     {
         private bool isPaused;
+        
+
 
         public MainWindow()
         {
             InitializeComponent();
             ReloadSongsAsync();
 
+
+
+            var contextMenu = LvSongs.Resources["ItemContextMenu"] as ContextMenu ?? throw new NullReferenceException("No ContextMenu found!");
+            MenuItem addToPlaylistMenuItem = new()
+            {
+                Header = "Add To Playlist"
+            };
+            foreach (var playlist in GetAllPlaylists())
+            {
+                MenuItem subMenuItem = new MenuItem();
+                subMenuItem.Header = playlist.Name;
+                subMenuItem.Click += SubMenuItemOnClick;
+                addToPlaylistMenuItem.Items.Add(subMenuItem);
+            }
+
+            MenuItem deleteSongMenuItem = new()
+            {
+                Header = "Delete"
+            };
+            //var currentMenuItem = (MenuItem)addToPlaylistMenuItem.Items.CurrentItem;
+            
+            deleteSongMenuItem.Click += DeleteSongMenuItem_Click;
+
+            contextMenu.Items.Add(addToPlaylistMenuItem);
+            contextMenu.Items.Add(deleteSongMenuItem);
+
+
             if (!PlaylistsXmlExisting())
                 CreatePlaylistsXml();
+            
 
             //Find ListViewItems of ListView(LvSongs) and add MouseRightButtonDown event to SongItem_MouseRightButtonDown
             //!! Aufgepasst immer !! wenn ein neues lied dazu kommt muss man die events auf die neuen lieder subscriben
             //LvSongs.MouseRightButtonDown += SongItem_MouseRightButtonDown;
+        }
+
+        private void SubMenuItemOnClick(object sender, RoutedEventArgs e)
+        {
+            var plName = (MenuItem)sender;
+            var currentPlaylist = GetAllPlaylists().FirstOrDefault(x => x.Name == plName.Header.ToString());
+            currentPlaylist.Songs.Add((Music)LvSongs.SelectedItem);
+        }
+
+        private void DeleteSongMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var song = (Music)LvSongs.SelectedItem;
+            File.Delete(song.FilePath);
+            ReloadSongsAsync();
         }
 
         private void CreatePlaylistsXml()
@@ -132,14 +176,15 @@ namespace MusicMan___Desktop
                 }
             }
             LvSongs.ItemsSource = musicList;
+            
         }
 
-        private void SongItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            ContextMenu cm = FindResource("songContextMenu") as ContextMenu;
-            cm.PlacementTarget = sender as ListViewItem;
-            cm.IsOpen = true;
-        }
+        //private void SongItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    ContextMenu cm = FindResource("songContextMenu") as ContextMenu;
+        //    cm.PlacementTarget = sender as ListViewItem;
+        //    cm.IsOpen = true;
+        //}
 
         private void DoubleClickPlay(object sender, RoutedEventArgs e)
         {
@@ -179,16 +224,16 @@ namespace MusicMan___Desktop
                 {
                     Music song = new Music();
 
-                    //XName name = "Artist";
-                    //song.Artist = songElement.Attribute(name).Value;
-                    //name = "FilePath";
-                    //song.FilePath = songElement.Attribute(name).Value;
-                    //name = "ImageUrl";
-                    //song.ImageUrl = songElement.Attribute(name).Value;
-                    //name = "Duration";
-                    //song.Duration = songElement.Attribute(name).Value;
-                    //name = "Title";
-                    //song.Title = songElement.Attribute(name).Value;
+                    XName name = "Artist";
+                    song.Artist = songElement.Attribute(name).Value;
+                    name = "FilePath";
+                    song.FilePath = songElement.Attribute(name).Value;
+                    name = "ImageUrl";
+                    song.ImageUrl = songElement.Attribute(name).Value;
+                    name = "Duration";
+                    song.Duration = songElement.Attribute(name).Value;
+                    name = "Title";
+                    song.Title = songElement.Attribute(name).Value;
 
                     songs.Add(song);
                 }

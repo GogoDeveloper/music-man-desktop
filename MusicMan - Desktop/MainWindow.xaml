@@ -7,11 +7,11 @@
         mc:Ignorable="d"
         Title="MusicMan" Height="450" Width="800" WindowState="Maximized" >
     <Window.Resources>
-        <ContextMenu x:Key="songContextMenu">
+        <!--<ContextMenu x:Key="songContextMenu">
             <MenuItem Header="Add to playlist" Click="MenuItemAddToPlaylist_Click"/>
-        </ContextMenu>
+        </ContextMenu>-->
     </Window.Resources>
-    
+
     <Grid Background="#FF404040">
         <TabControl>
             <TabItem Header="Music">
@@ -30,30 +30,41 @@
                             <RowDefinition Height="1*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Button Grid.Row="0" Grid.Column="4" Name="ReloadButton" Click="ReloadButton_Click">Reload</Button>
-                    
-                    <ListView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5" Name="LvSongs" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" MinWidth="794" MaxHeight="800" MinHeight="300">
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="{x:Type ListViewItem}">
-                                <EventSetter Event="MouseDoubleClick" Handler="DoubleClickPlay"></EventSetter>
-                                <!--<EventSetter Event="MouseRightButtonDown" ></EventSetter>-->
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="#" DisplayMemberBinding="{Binding Index}"></GridViewColumn>
-                                <GridViewColumn Header="Thumbnail" Width="120">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Image Source="{Binding ImageUrl}"></Image>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" Width="auto"></GridViewColumn>
-                                <GridViewColumn Header="Artist" DisplayMemberBinding="{Binding Artist}" Width="auto"></GridViewColumn>
-                                <GridViewColumn Header="Path" DisplayMemberBinding="{Binding FilePath}" Width="auto"></GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+
+                        <ListView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5" Name="LvSongs" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" MinWidth="794" MaxHeight="800" MinHeight="300">
+
+                            <ListView.Resources>
+                                <ContextMenu x:Key="ItemContextMenu">
+                                    
+
+                                </ContextMenu>
+                            </ListView.Resources>
+
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <EventSetter Event="MouseDoubleClick" Handler="DoubleClickPlay"></EventSetter>
+                                    <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}"></Setter>
+
+                                    <!--<EventSetter Event="MouseRightButtonDown" ></EventSetter>-->
+                                </Style>
+
+                            </ListView.ItemContainerStyle>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="#" DisplayMemberBinding="{Binding Index}"></GridViewColumn>
+                                    <GridViewColumn Header="Thumbnail" Width="120">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Image Source="{Binding ImageUrl}"></Image>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" Width="auto"></GridViewColumn>
+                                    <GridViewColumn Header="Artist" DisplayMemberBinding="{Binding Artist}" Width="auto"></GridViewColumn>
+                                    <GridViewColumn Header="Path" DisplayMemberBinding="{Binding FilePath}" Width="auto"></GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                         <MediaElement Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" Height="39" Width="795" Name="MePlayer" />
                         <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" HorizontalAlignment="Center">
                             <Image x:Name="ImgThumbnail"  Stretch="None" RenderOptions.BitmapScalingMode="HighQuality"></Image>
@@ -63,11 +74,11 @@
                                 <Button x:Name="BtnPlay" Click="BtnPlay_Click">Play</Button>
                                 <Button x:Name="BtnPause" Click="BtnPause_Click">Pause</Button>
                                 <Button x:Name="BtnNext" Click="BtnNext_Click">Next</Button>
-                                
+
                             </StackPanel>
                         </StackPanel>
                     </Grid>
-                    
+
                 </StackPanel>
 
 
