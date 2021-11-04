@@ -6,6 +6,12 @@
         xmlns:local="clr-namespace:MusicMan___Desktop"
         mc:Ignorable="d"
         Title="MusicMan" Height="450" Width="800" WindowState="Maximized" >
+    <Window.Resources>
+        <ContextMenu x:Key="songContextMenu">
+            <MenuItem Header="Add to playlist" Click="MenuItemAddToPlaylist_Click"/>
+        </ContextMenu>
+    </Window.Resources>
+    
     <Grid Background="#FF404040">
         <TabControl>
             <TabItem Header="Music">

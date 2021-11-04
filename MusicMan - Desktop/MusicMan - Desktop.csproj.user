@@ -10,9 +10,15 @@
     <Compile Update="AddPlaylist.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="AddSongToPlaylist.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="AddPlaylist.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="AddSongToPlaylist.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">

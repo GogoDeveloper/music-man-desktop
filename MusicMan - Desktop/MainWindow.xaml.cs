@@ -28,6 +28,10 @@ namespace MusicMan___Desktop
 
             if (!PlaylistsXmlExisting())
                 CreatePlaylistsXml();
+
+            //Find ListViewItems of ListView(LvSongs) and add MouseRightButtonDown event to SongItem_MouseRightButtonDown
+            //!! Aufgepasst immer !! wenn ein neues lied dazu kommt muss man die events auf die neuen lieder subscriben
+            //LvSongs.MouseRightButtonDown += SongItem_MouseRightButtonDown;
         }
 
         private void CreatePlaylistsXml()
@@ -86,7 +90,6 @@ namespace MusicMan___Desktop
         private async Task<StreamManifest> RetrieveStreamManifest(string videoId, YoutubeClient client)
         {
             return await client.Videos.Streams.GetManifestAsync(videoId);
-
         }
 
         private async Task DownloadAudio(YoutubeClient client, IStreamInfo streamInfo, string downloadPath)
@@ -129,6 +132,12 @@ namespace MusicMan___Desktop
             LvSongs.ItemsSource = musicList;
         }
 
+        private void SongItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ContextMenu cm = FindResource("songContextMenu") as ContextMenu;
+            cm.PlacementTarget = sender as ListViewItem;
+            cm.IsOpen = true;
+        }
 
         private void DoubleClickPlay(object sender, RoutedEventArgs e)
         {
@@ -265,6 +274,17 @@ namespace MusicMan___Desktop
             q.ToList().ForEach(x => x.Remove());
 
             doc.Save(Properties.Settings.Default.MusicPath + "/Playlists.xml");
+        }
+
+        private void MenuItemAddToPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem mi = sender as MenuItem;
+            ContextMenu cm = mi.Parent as ContextMenu;
+            ListViewItem songItem = cm.PlacementTarget as ListViewItem;
+            Music selectedSong = songItem.Content as Music;
+
+            AddSongToPlaylist addSongDialog = new AddSongToPlaylist(selectedSong);
+            addSongDialog.ShowDialog();
         }
     }
 }

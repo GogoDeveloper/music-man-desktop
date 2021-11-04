@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MusicMan___Desktop
 {
-    class Music
+    public class Music
     {
         public string Title { get; set; }
         public string FilePath { get; set; }
