@@ -20,13 +20,13 @@ namespace MusicMan___Desktop
     /// </summary>
     public partial class AddSongToPlaylist : Window
     {
-        public Music selectedSong;
+        public Music SelectedSong;
 
         public AddSongToPlaylist(Music song)
         {
             InitializeComponent();
             InitializeListView();
-            selectedSong = song;
+            SelectedSong = song;
         }
 
         public void InitializeListView()
@@ -93,11 +93,11 @@ namespace MusicMan___Desktop
 
             XElement selectedPlaylistElement = doc.Root.Element(selectedPlaylist.Content.ToString());
 
-            selectedPlaylistElement.Add(new XAttribute("Artist", selectedSong.Artist));
-            selectedPlaylistElement.Add(new XAttribute("Title", selectedSong.Title));
-            selectedPlaylistElement.Add(new XAttribute("Duration", selectedSong.Duration));
-            selectedPlaylistElement.Add(new XAttribute("FilePath", selectedSong.FilePath));
-            selectedPlaylistElement.Add(new XAttribute("ImageUrl", selectedSong.ImageUrl));
+            selectedPlaylistElement.Add(new XAttribute("Artist", SelectedSong.Artist));
+            selectedPlaylistElement.Add(new XAttribute("Title", SelectedSong.Title));
+            selectedPlaylistElement.Add(new XAttribute("Duration", SelectedSong.Duration));
+            selectedPlaylistElement.Add(new XAttribute("FilePath", SelectedSong.FilePath));
+            selectedPlaylistElement.Add(new XAttribute("ImageUrl", SelectedSong.ImageUrl));
 
             doc.Save(Properties.Settings.Default.MusicPath + "/Playlist.xml");
 

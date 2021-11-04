@@ -8,6 +8,7 @@ namespace MusicMan___Desktop
 {
     public class Music
     {
+        public int Index { get; set; }
         public string Title { get; set; }
         public string FilePath { get; set; }
         public string Artist { get; set; }

@@ -20,7 +20,8 @@ namespace MusicMan___Desktop
     /// </summary>
     public partial class MainWindow : Window
     {
-        private List<Music> musicList;
+        private bool isPaused;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -104,7 +105,7 @@ namespace MusicMan___Desktop
         {
             YoutubeClient youtubeClient = new YoutubeClient();
 
-            musicList = new List<Music>();
+            List<Music> musicList = new List<Music>();
             List<string> songs = Directory.GetFiles(Properties.Settings.Default.MusicPath, "*.mp3").ToList();
             if (songs.Any())
             {
@@ -117,6 +118,7 @@ namespace MusicMan___Desktop
                         {
                             Music currentSong = new Music
                             {
+                                Index = songs.IndexOf(song),
                                 FilePath = song,
                                 Title = songTitle,
                                 Artist = result.Author.Title ?? "",
@@ -141,9 +143,9 @@ namespace MusicMan___Desktop
 
         private void DoubleClickPlay(object sender, RoutedEventArgs e)
         {
-            
-            
-            
+            PlaySong(0);
+
+
         }
 
         private void PlaylistTab_Focus(object sender, RoutedEventArgs e)
@@ -201,7 +203,7 @@ namespace MusicMan___Desktop
 
         private void BtnPrev_Click(object sender, RoutedEventArgs e)
         {
-
+            PlaySong(-1);
         }
 
         private void NewPlaylist_Btn(object sender, RoutedEventArgs e)
@@ -213,40 +215,31 @@ namespace MusicMan___Desktop
 
         private void BtnPlay_Click(object sender, RoutedEventArgs e)
         {
-            if (MePlayer.IsLoaded)
+            if (isPaused)
             {
-                MePlayer.LoadedBehavior = MediaState.Manual;
-                MePlayer.Play();
+                if (MePlayer.IsLoaded)
+                {
+                    MePlayer.LoadedBehavior = MediaState.Manual;
+                    MePlayer.Play();
+                    isPaused = false;
+                }
             }
+            else
+            {
+                PlaySong(0);
+            }
+            
         }
 
         private void BtnPause_Click(object sender, RoutedEventArgs e)
         {
             MePlayer.Pause();
+            isPaused = true;
         }
 
         private void BtnNext_Click(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        private void Mouse_OnMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ClickCount == 2)
-            {
-                ListViewItem lvItem = (ListViewItem)sender;
-
-                Music song = (Music)lvItem.DataContext;
-                LbCurrentSong.Content = song.Title;
-                ImgThumbnail.Source = new BitmapImage(new Uri(song.ImageUrl));
-
-                //mePlayer.Source = new Uri(song.FilePath);
-                if (MePlayer.IsLoaded)
-                {
-                    MePlayer.LoadedBehavior = MediaState.Manual;
-                    MePlayer.Play();
-                }
-            }
+            PlaySong(+1);
         }
 
         private void DelPlaylist_Btn(object sender, RoutedEventArgs e)
@@ -286,7 +279,49 @@ namespace MusicMan___Desktop
             AddSongToPlaylist addSongDialog = new AddSongToPlaylist(selectedSong);
             addSongDialog.ShowDialog();
         }
+
+        private void PlaySong(int prevNext)
+        {
+            Music song;
+            if (prevNext != 0)
+            {
+                var index = LvSongs.SelectedIndex + prevNext;
+                if (index != -1 && index < LvSongs.Items.Count)
+                {
+                    song = (Music)LvSongs.Items.GetItemAt(index);
+                    LvSongs.SelectedItem = song;
+                }
+                else
+                {
+                    song = null;
+                }
+                
+            }
+            else
+            {
+                song = (Music)LvSongs.SelectedItem;
+            }
+
+
+            if (song != null)
+            {
+                LbCurrentSong.Content = song.Title;
+                ImgThumbnail.Source = new BitmapImage(new Uri(song.ImageUrl));
+                MePlayer.Source = new Uri(song.FilePath);
+                if (MePlayer.IsLoaded)
+                {
+                    MePlayer.LoadedBehavior = MediaState.Manual;
+                    MePlayer.Play();
+                }
+            }
+
+               
+                
+            
+
+        }
     }
+
 }
 //private string RetrieveVideoId(string videoUrl)
 //{

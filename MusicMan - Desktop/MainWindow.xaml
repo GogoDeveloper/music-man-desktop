@@ -32,14 +32,20 @@
                         <Button Grid.Row="0" Grid.Column="4" Name="ReloadButton" Click="ReloadButton_Click">Reload</Button>
                     
                     <ListView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5" Name="LvSongs" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" MinWidth="794" MaxHeight="800" MinHeight="300">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <EventSetter Event="MouseDoubleClick" Handler="DoubleClickPlay"></EventSetter>
+                                <!--<EventSetter Event="MouseRightButtonDown" ></EventSetter>-->
+                            </Style>
+                        </ListView.ItemContainerStyle>
                         <ListView.View>
                             <GridView>
-                                    
+                                <GridViewColumn Header="#" DisplayMemberBinding="{Binding Index}"></GridViewColumn>
                                 <GridViewColumn Header="Thumbnail" Width="120">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <Image Source="{Binding ImageUrl}"></Image>
-                                            </DataTemplate>
+                                        </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Title}" Width="auto"></GridViewColumn>
@@ -47,30 +53,11 @@
                                 <GridViewColumn Header="Path" DisplayMemberBinding="{Binding FilePath}" Width="auto"></GridViewColumn>
                             </GridView>
                         </ListView.View>
-                        <!--<ListView.ItemTemplate>
-                                <DataTemplate DataType="local:Music">--><!--
-                                <ListViewItem MouseDoubleClick="DoubleClickPlay" MinWidth="794">
-                                   
-                                    <StackPanel Orientation="Horizontal">
-                                            <Image Source="{Binding ImageUrl}"></Image>
-                                            <StackPanel>
-                                                <TextBlock Text="{Binding Title}" FontWeight="Bold"></TextBlock>
-                                                <TextBlock Text="{Binding Artist}" FontWeight="ExtraLight" ></TextBlock>
-
-
-                                                <TextBlock Text="{Binding FilePath}"></TextBlock>
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </ListViewItem>
-                                    --><!--<TextBlock Text="{Binding Length}"></TextBlock>-->
-                            <!--</DataTemplate>
-                        </ListView.ItemTemplate>-->
-
                     </ListView>
                         <MediaElement Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" Height="39" Width="795" Name="MePlayer" />
                         <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" HorizontalAlignment="Center">
-                            <Image x:Name="ImgThumbnail" MaxHeight="150" MaxWidth="150" Stretch="None" RenderOptions.BitmapScalingMode="HighQuality"></Image>
-                            <Label Name="LbCurrentSong" Foreground="#FF919191" ></Label>
+                            <Image x:Name="ImgThumbnail"  Stretch="None" RenderOptions.BitmapScalingMode="HighQuality"></Image>
+                            <Label Name="LbCurrentSong" Foreground="#FFFFFEFE" ></Label>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                 <Button x:Name="BtnPrev" Click="BtnPrev_Click">Previous</Button>
                                 <Button x:Name="BtnPlay" Click="BtnPlay_Click">Play</Button>
