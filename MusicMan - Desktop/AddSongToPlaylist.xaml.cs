@@ -72,7 +72,7 @@ namespace MusicMan___Desktop
                     songs.Add(song);
                 }
 
-                playlist.Songs = songs;
+                playlist.AssignList(songs);
 
                 playlists.Add(playlist);
             }

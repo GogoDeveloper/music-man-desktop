@@ -69,7 +69,7 @@ namespace MusicMan___Desktop
         {
             var plName = (MenuItem)sender;
             var currentPlaylist = GetAllPlaylists().FirstOrDefault(x => x.Name == plName.Header.ToString());
-            currentPlaylist.Songs.Add((Music)LvSongs.SelectedItem);
+            currentPlaylist.AddSong((Music)LvSongs.SelectedItem);
         }
 
         private void DeleteSongMenuItem_Click(object sender, RoutedEventArgs e)
@@ -238,7 +238,7 @@ namespace MusicMan___Desktop
                     songs.Add(song);
                 }
 
-                playlist.Songs = songs;
+                playlist.AssignList(songs);
 
                 playlists.Add(playlist);
             }
