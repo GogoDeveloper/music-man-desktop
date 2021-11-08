@@ -30,6 +30,7 @@ namespace MusicMan___Desktop
         {
             InitializeComponent();
 
+            Camunda c = new Camunda();
         }
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
