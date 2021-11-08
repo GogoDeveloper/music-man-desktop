@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicMan___Desktop"
         mc:Ignorable="d"
-        Title="MusicMan" Height="450" Width="800" WindowState="Maximized" >
+        Title="MusicMan" Height="450" Width="800" WindowState="Maximized" Loaded="MainWindow_OnLoaded" >
     <Window.Resources>
         <!--<ContextMenu x:Key="songContextMenu">
             <MenuItem Header="Add to playlist" Click="MenuItemAddToPlaylist_Click"/>
@@ -14,11 +14,14 @@
 
     <Grid Background="#FF404040">
         <TabControl>
-            <TabItem Header="Music">
+            <TabItem Name="MusicTab">
+                <TabItem.Header>
+                    <Label Content="Music" MouseLeftButtonDown="OnMusicTabClick"/>
+                </TabItem.Header>
                 <StackPanel Background="#FF8F8F8F">
                     <Grid >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition ></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
@@ -29,13 +32,13 @@
                             <RowDefinition Height="3*"></RowDefinition>
                             <RowDefinition Height="1*"></RowDefinition>
                         </Grid.RowDefinitions>
-                        <Button Grid.Row="0" Grid.Column="4" Name="ReloadButton" Click="ReloadButton_Click">Reload</Button>
-
-                        <ListView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5" Name="LvSongs" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" MinWidth="794" MaxHeight="800" MinHeight="300">
+                        <Button Grid.Row="0" Grid.Column="4" Click="ReloadButton_Click">Reload</Button>
+                        <Button Grid.Row="0" Grid.Column="3" Name="BackToSongsBtn" Click="BackToSongsBtn_Click" Visibility="Hidden">Back to all Songs</Button>
+                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Foreground="FloralWhite" Background="DarkBlue" HorizontalContentAlignment="Center" Name="SongsLbl">All Songs</Label>
+                        <ListView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5" Name="LvSongs" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" MinWidth="794" MaxHeight="800" MinHeight="300" Loaded="LvSongs_OnLoaded">
 
                             <ListView.Resources>
                                 <ContextMenu x:Key="ItemContextMenu">
-                                    
 
                                 </ContextMenu>
                             </ListView.Resources>
@@ -83,16 +86,26 @@
 
 
             </TabItem>
-            <TabItem Header="Playlist" Selector.Selected="PlaylistTab_Focus">
+            <TabItem Name="PlaylistTab">
+                <TabItem.Header>
+                    <Label Content="Playlist" MouseLeftButtonDown="PlaylistTab_Focus"/>
+                </TabItem.Header>
                 <Grid>
                     <Button Width="30" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Content="+" Click="NewPlaylist_Btn"/>
                     <Button Width="30" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Content="-" Margin="0,0,30,0" Click="DelPlaylist_Btn"/>
                     <ListView Name="PlaylistsLv" Margin="0,20,0,0">
-
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <EventSetter Event="MouseDoubleClick" Handler="DoubleClickPlaylist"></EventSetter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
                     </ListView>
                 </Grid>
             </TabItem>
-            <TabItem Header="Download" Height="20" VerticalAlignment="Top">
+            <TabItem Name="DownloadTab">
+                <TabItem.Header>
+                    <Label Content="Download"/>
+                </TabItem.Header>
                 <Grid>
                     <Button Cursor="Hand" HorizontalAlignment="Center" Content="Download" Height="40" Width="120" FontSize="20" FontWeight="Bold" Click="DownloadBtn_Click"/>
                     <TextBox HorizontalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,0,100" Width="300" Height="30" Name="UrlLbl"/>

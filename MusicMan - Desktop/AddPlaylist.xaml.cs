@@ -34,7 +34,7 @@ namespace MusicMan___Desktop
 
             XDocument doc = XDocument.Load(Properties.Settings.Default.MusicPath + "/Playlists.xml");
 
-            XElement newPlaylist = new XElement(PlaylistNameTb.Text);
+            XElement newPlaylist = new XElement(PlaylistNameTb.Text.Replace(" ", ""));
 
             doc.Root.Add(newPlaylist);
             doc.Save(Properties.Settings.Default.MusicPath + "/Playlists.xml");

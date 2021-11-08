@@ -6,6 +6,7 @@ using System.Windows;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 using System.Windows.Media;
 using AngleSharp.Common;
@@ -21,17 +22,34 @@ namespace MusicMan___Desktop
     public partial class MainWindow : Window
     {
         private bool isPaused;
-        
+        private bool isPlaylist;
+
 
 
         public MainWindow()
         {
             InitializeComponent();
-            ReloadSongsAsync();
 
+        }
 
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (!isPlaylist)
+            {
+                _ = ReloadSongsAsync(Directory.GetFiles(Properties.Settings.Default.MusicPath, "*.mp3").ToList());
+            }
 
+            if (!PlaylistsXmlExisting())
+                CreatePlaylistsXml();
+           
+            
+        }
+        private void LvSongs_OnLoaded(object sender, RoutedEventArgs e)
+        {
             var contextMenu = LvSongs.Resources["ItemContextMenu"] as ContextMenu ?? throw new NullReferenceException("No ContextMenu found!");
+
+            contextMenu.Items.Clear();
+
             MenuItem addToPlaylistMenuItem = new()
             {
                 Header = "Add To Playlist"
@@ -43,40 +61,66 @@ namespace MusicMan___Desktop
                 subMenuItem.Click += SubMenuItemOnClick;
                 addToPlaylistMenuItem.Items.Add(subMenuItem);
             }
-
             MenuItem deleteSongMenuItem = new()
             {
                 Header = "Delete"
             };
-            //var currentMenuItem = (MenuItem)addToPlaylistMenuItem.Items.CurrentItem;
-            
+
             deleteSongMenuItem.Click += DeleteSongMenuItem_Click;
 
             contextMenu.Items.Add(addToPlaylistMenuItem);
             contextMenu.Items.Add(deleteSongMenuItem);
+            if (isPlaylist)
+            {
+                MenuItem removeFromPlaylistMenuItem = new()
+                {
+                    Header = "Remove song from this Playlist"
+                };
 
+                removeFromPlaylistMenuItem.Click += RemoveFromPlaylistMenuItem_Click;
 
-            if (!PlaylistsXmlExisting())
-                CreatePlaylistsXml();
+                contextMenu.Items.Add(removeFromPlaylistMenuItem);
+                
+            }
+        }
+        private void OnMusicTabClick(object sender, MouseButtonEventArgs e)
+        {
+
+            if (!isPlaylist)
+            {
+                _ = ReloadSongsAsync(Directory.GetFiles(Properties.Settings.Default.MusicPath, "*.mp3").ToList());
+            }
+            else
+            {
+                BackToSongsBtn.Visibility = Visibility.Visible;
+                var playlist = GetAllPlaylists().FirstOrDefault(x => x.Name.Equals(SongsLbl.Content));
+                _ = ReloadSongsAsync(LoadSongsFromPlaylist(playlist.Name));
+
+            }
             
+        }
 
-            //Find ListViewItems of ListView(LvSongs) and add MouseRightButtonDown event to SongItem_MouseRightButtonDown
-            //!! Aufgepasst immer !! wenn ein neues lied dazu kommt muss man die events auf die neuen lieder subscriben
-            //LvSongs.MouseRightButtonDown += SongItem_MouseRightButtonDown;
+        private void RemoveFromPlaylistMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var song = (Music)LvSongs.SelectedItem;
+            var playlist = GetAllPlaylists().FirstOrDefault(x => x.Name.Equals(SongsLbl.Content));
+            RemoveSongFromPlaylist(song, playlist);
+            _ = ReloadSongsAsync(LoadSongsFromPlaylist(playlist.Name));
+
         }
 
         private void SubMenuItemOnClick(object sender, RoutedEventArgs e)
         {
             var plName = (MenuItem)sender;
             var currentPlaylist = GetAllPlaylists().FirstOrDefault(x => x.Name == plName.Header.ToString());
-            currentPlaylist.AddSong((Music)LvSongs.SelectedItem);
+            AddSongToPlaylist((Music)LvSongs.SelectedItem, currentPlaylist);
         }
 
         private void DeleteSongMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var song = (Music)LvSongs.SelectedItem;
             File.Delete(song.FilePath);
-            ReloadSongsAsync();
+            _ = ReloadSongsAsync(Directory.GetFiles(Properties.Settings.Default.MusicPath, "*.mp3").ToList());
         }
 
         private void CreatePlaylistsXml()
@@ -143,14 +187,22 @@ namespace MusicMan___Desktop
         }
         private void ReloadButton_Click(object sender, RoutedEventArgs e)
         {
-            ReloadSongsAsync();
+            if (!isPlaylist)
+            {
+                _ = ReloadSongsAsync(Directory.GetFiles(Properties.Settings.Default.MusicPath, "*.mp3").ToList());
+            }
+            else
+            {
+                var playlist = GetAllPlaylists().FirstOrDefault(x => x.Name.Equals(SongsLbl.Content));
+                _ = ReloadSongsAsync(LoadSongsFromPlaylist(playlist.Name));
+            }
+
         }
-        private async Task ReloadSongsAsync()
+        private async Task ReloadSongsAsync(List<string> songs)
         {
             YoutubeClient youtubeClient = new YoutubeClient();
 
             List<Music> musicList = new List<Music>();
-            List<string> songs = Directory.GetFiles(Properties.Settings.Default.MusicPath, "*.mp3").ToList();
             if (songs.Any())
             {
                 foreach (var song in songs)
@@ -164,7 +216,7 @@ namespace MusicMan___Desktop
                             {
                                 Index = songs.IndexOf(song),
                                 FilePath = song,
-                                Title = songTitle,
+                                Title = GetSongName(songTitle),
                                 Artist = result.Author.Title ?? "",
                                 ImageUrl = result.Thumbnails.FirstOrDefault()?.Url,
                                 Duration = result.Duration.ToString()
@@ -176,7 +228,7 @@ namespace MusicMan___Desktop
                 }
             }
             LvSongs.ItemsSource = musicList;
-            
+
         }
 
         //private void SongItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -189,8 +241,6 @@ namespace MusicMan___Desktop
         private void DoubleClickPlay(object sender, RoutedEventArgs e)
         {
             PlaySong(0);
-
-
         }
 
         private void PlaylistTab_Focus(object sender, RoutedEventArgs e)
@@ -273,7 +323,7 @@ namespace MusicMan___Desktop
             {
                 PlaySong(0);
             }
-            
+
         }
 
         private void BtnPause_Click(object sender, RoutedEventArgs e)
@@ -314,16 +364,6 @@ namespace MusicMan___Desktop
             doc.Save(Properties.Settings.Default.MusicPath + "/Playlists.xml");
         }
 
-        private void MenuItemAddToPlaylist_Click(object sender, RoutedEventArgs e)
-        {
-            MenuItem mi = sender as MenuItem;
-            ContextMenu cm = mi.Parent as ContextMenu;
-            ListViewItem songItem = cm.PlacementTarget as ListViewItem;
-            Music selectedSong = songItem.Content as Music;
-
-            AddSongToPlaylist addSongDialog = new AddSongToPlaylist(selectedSong);
-            addSongDialog.ShowDialog();
-        }
 
         private void PlaySong(int prevNext)
         {
@@ -340,7 +380,7 @@ namespace MusicMan___Desktop
                 {
                     song = null;
                 }
-                
+
             }
             else
             {
@@ -360,12 +400,112 @@ namespace MusicMan___Desktop
                 }
             }
 
-               
-                
-            
-
         }
+
+        private string GetSongName(string songTitle)
+        {
+
+            Regex regex = new Regex("^.*-.*\\(.*\\)$");
+            if (regex.IsMatch(songTitle))
+            {
+                var hyphen = songTitle.IndexOf("-", StringComparison.OrdinalIgnoreCase);
+                songTitle = songTitle.Substring(hyphen + 1, songTitle.IndexOf("(", StringComparison.OrdinalIgnoreCase) - hyphen - 2).Trim();
+            }
+
+
+            return songTitle;
+        }
+        private void AddSongToPlaylist(Music song, Playlist playlist)
+        {
+            playlist.Songs.Add(song);
+
+            XDocument doc = XDocument.Load(Properties.Settings.Default.MusicPath + "/Playlists.xml");
+
+            XElement playlistElement = doc.Root.Element(playlist.Name);
+
+            XElement songElement = new XElement(song.Title.Replace(" ", ""));
+
+            songElement.Add(new XAttribute("Artist", song.Artist));
+            songElement.Add(new XAttribute("Title", song.Title));
+            songElement.Add(new XAttribute("Duration", song.Duration));
+            songElement.Add(new XAttribute("FilePath", song.FilePath));
+            songElement.Add(new XAttribute("ImageUrl", song.ImageUrl));
+
+
+            if (playlistElement.Element(songElement.Name) != null)
+            {
+                var meBoxResult = MessageBox.Show($"Are you sure you want to add {song.Title} to this Playlist again?",
+                    "Duplicate Song in Playlist", MessageBoxButton.YesNo);
+                if (meBoxResult == MessageBoxResult.Yes)
+                {
+                    playlistElement.Add(songElement);
+                }
+            }
+            else
+            {
+                playlistElement.Add(songElement);
+            }
+
+
+            doc.Save(Properties.Settings.Default.MusicPath + "/Playlists.xml");
+        }
+        public void RemoveSongFromPlaylist(Music song, Playlist playlist)
+        {
+            playlist.Songs.Remove(song);
+
+            XDocument doc = XDocument.Load(Properties.Settings.Default.MusicPath + "/Playlists.xml");
+
+            XElement playlistElement = doc.Root.Element(playlist.Name);
+
+            playlistElement.Element(song.Title.Replace(" ", "")).Remove();
+
+
+            doc.Save(Properties.Settings.Default.MusicPath + "/Playlists.xml");
+        }
+
+        private void DoubleClickPlaylist(object sender, MouseButtonEventArgs e)
+        {
+            ListViewItem lvItem = (ListViewItem)sender;
+
+            _ = ReloadSongsAsync(LoadSongsFromPlaylist(lvItem.Content.ToString()));
+            isPlaylist = true;
+            SongsLbl.Content = lvItem.Content;
+        }
+
+        private List<string> LoadSongsFromPlaylist(string playlistName)
+        {
+            XDocument doc = XDocument.Load(Properties.Settings.Default.MusicPath + "/Playlists.xml");
+            XElement playlistElement = doc.Root.Element(playlistName);
+            var dirList = Directory.GetFiles(Properties.Settings.Default.MusicPath, "*.mp3").ToList();
+            List<string> songs = new List<string>();
+            foreach (var xElement in playlistElement.Elements())
+            {
+                if (playlistElement.Elements().Any())
+                {
+                    if (dirList.Contains((string)xElement.Attribute(XName.Get(nameof(Music.FilePath)))))
+                    {
+                        songs.Add((string)xElement.Attribute(XName.Get(nameof(Music.FilePath))));
+                    }
+                }
+
+            }
+
+            return songs;
+        }
+
+
+        private void BackToSongsBtn_Click(object sender, RoutedEventArgs e)
+        {
+            isPlaylist = false;
+            _ = ReloadSongsAsync(Directory.GetFiles(Properties.Settings.Default.MusicPath, "*.mp3").ToList());
+            BackToSongsBtn.Visibility = Visibility.Hidden;
+            SongsLbl.Content = "All Songs";
+        }
+
+
+        
     }
+
 
 }
 //private string RetrieveVideoId(string videoUrl)
@@ -405,4 +545,14 @@ namespace MusicMan___Desktop
 //{
 //    MessageBox.Show("The link you've entered is invalid!", "Invalid Url detected", MessageBoxButton.OK, MessageBoxImage.Error);
 //    return;
+//}
+//private void MenuItemAddToPlaylist_Click(object sender, RoutedEventArgs e)
+//{
+//    MenuItem mi = sender as MenuItem;
+//    ContextMenu cm = mi.Parent as ContextMenu;
+//    ListViewItem songItem = cm.PlacementTarget as ListViewItem;
+//    Music selectedSong = songItem.Content as Music;
+
+//    AddSongToPlaylist addSongDialog = new AddSongToPlaylist(selectedSong);
+//    addSongDialog.ShowDialog();
 //}
